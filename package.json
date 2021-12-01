@@ -1,0 +1,27 @@
+{
+  "dependencies": {
+    "axios": "^0.24.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12",
+    "mqtt": "^4.2.8",
+    "ngrok": "^4.2.2",
+    "node-osc": "^6.1.10",
+    "nodemon": "^2.0.14"
+  },
+  "name": "api",
+  "description": "api for the organic team in the navak project",
+  "version": "2.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "git+https://github.com/navak-project/api.git",
+  "author": "John <john.olivierb@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/navak-project/api/issues"
+  },
+  "homepage": "https://github.com/navak-project/api#readme"
+}
