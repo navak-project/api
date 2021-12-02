@@ -94,7 +94,7 @@ exports.findAll = async (req, res) => {
 exports.findOne = async (req, res) => {
     const id = req.params.id;
     try {
-        const pulsesensor = await Pulsesensor.findById(id);
+        const pulsesensor = await User.findOne({id:id});
         res.send(pulsesensor);
     } catch (error) {
         res.status(500).send({

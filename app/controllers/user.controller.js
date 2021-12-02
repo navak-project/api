@@ -117,9 +117,8 @@ exports.findAll = async (req, res) => {
 // Find a single User with an id
 exports.findOne = async (req, res) => {
   const id = req.params.id;
-  console.log(id);
   try {
-    const user = await User.findById(id);
+    const user = await User.findOne({id:id});
     res.send(user);
   } catch (error) {
     res.status(500).send({
