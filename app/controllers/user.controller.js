@@ -2,24 +2,16 @@ const db = require("../models");
 const User = db.users;
 const client = db.mqtt;
 const randomColor = require('../utils');
-//client.publish('api/pulsesensors/state', "222")
-
 
 // RESET PULSE TO 0
 exports.resetAll = async (req, res) => {
   try {
     const options = { upsert: true };
-    const updateDoc = {
-      $set: { pulse: 0 },
-      $set: { "rgb": "0, 0, 0" },
-    };
     const allUser = await User.find();
-    console.log(allUser);
     allUser.forEach(async element => {
       await User.updateOne({ _id: element._id }, {"pulse":"0", "rgb": "0, 0, 0" }, options);
-      client.publish('api/users/'+element.id+'/active', JSON.stringify(element))
+      client.publish(`/lantern/${element.id}/reset`)
     });
-    
     res.send("All pulse are now set to 0");
   } catch (error) {
     console.error(error);
@@ -29,16 +21,13 @@ exports.resetAll = async (req, res) => {
   }
 }
 
-
-
 // RESET ONE PULSE TO 0
 exports.reset = async (req, res) => {
   const id = req.params.id;
   try {
     await User.findByIdAndUpdate(id, {"pulse": "0", "rgb":"0, 0, 0"}, { useFindAndModify: false })
     const user = await User.findById(id);
-    console.log(user);
-    client.publish('api/users/'+user.id+'/active', JSON.stringify(user))
+    client.publish(`/lantern/${user.id}/reset`)
     res.send(`User ${id} pulse is now 0!`);
   } catch (error) {
     console.log('error', error);
@@ -65,7 +54,7 @@ exports.randomUser = async (req, res) => {
     const updateDoc = {
       $set: { rgb: color },
      };
-    const result = await User.updateOne({_id: picked._id}, updateDoc, options);
+    await User.updateOne({_id: picked._id}, updateDoc, options);
     //console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,);
     const user = await User.findById(picked._id);
     res.send(user);
@@ -129,7 +118,6 @@ exports.findOne = async (req, res) => {
 
 // Update a User by the id in the request
 exports.update = async (req, res) => {
-  
   if (!req.body) {
     return res.status(400).send({
       message: "Data to update can not be empty!"
@@ -139,11 +127,8 @@ exports.update = async (req, res) => {
   try {
     await User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     const user = await User.findById(id);
-    if(user.id == "5a8e"){
-      client.publish('/lantern/5a8e/audio/ignite', user.pulse.toString())
-    }
-    
-    client.publish('api/users/'+user.id+'/active', JSON.stringify(user))
+    client.publish(`/lantern/${user.id}/audio/ignite`, user.pulse.toString())
+    client.publish(`/lanterns/${user.id}/isactive`, JSON.stringify(user))
     res.send(`User ${id} updated successful!`);
   } catch (error) {
     console.log('error', error);

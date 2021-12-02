@@ -1,6 +1,5 @@
 
 const axios = require('axios');
-
 /**
  * Get a random RGB color
  * @return {string} return random RGB color

@@ -103,11 +103,8 @@ exports.findOne = async (req, res) => {
     }
 };
 
-
 // Update a User by the id in the request
 exports.update = async (req, res) => {
-
-
     if (!req.body) {
         return res.status(400).send({
             message: "Data to update can not be empty!"
@@ -119,9 +116,7 @@ exports.update = async (req, res) => {
             useFindAndModify: false
         })
         const puslesensor = await Pulsesensor.findById(id);
-        
-       // client.publish('/api/pulsesensors/state', JSON.stringify(puslesensor))
-       client.publish('api/pulsesensors/'+id+'/state', JSON.stringify(puslesensor))
+       client.publish(`/bpmstation/${id}/state`, JSON.stringify(puslesensor))
         res.send(`PulseSensor ${id} updated successful!`);
     } catch (error) {
         console.log('error', error);
