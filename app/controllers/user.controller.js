@@ -9,8 +9,11 @@ exports.resetAll = async (req, res) => {
     const options = { upsert: true };
     const allUser = await User.find();
     allUser.forEach(async element => {
-      await User.updateOne({ _id: element._id }, {"pulse":"0", "rgb": "0, 0, 0" }, options);
-      client.publish(`/lantern/${element.id}/reset`)
+      //const thisUser = await User.findOne({id:id});
+      await User.updateOne({id:element.id}, {"pulse":"0", "rgb": "0, 0, 0" }, options)
+      const thisUser = await User.findOne({id:element.id})
+      client.publish(`/lantern/${thisUser.id}/reset`, JSON.stringify(thisUser))
+      console.log(thisUser);
     });
     res.send("All pulse are now set to 0");
   } catch (error) {
@@ -25,9 +28,9 @@ exports.resetAll = async (req, res) => {
 exports.reset = async (req, res) => {
   const id = req.params.id;
   try {
-    await User.findByIdAndUpdate(id, {"pulse": "0", "rgb":"0, 0, 0"}, { useFindAndModify: false })
-    const user = await User.findById(id);
-    client.publish(`/lantern/${user.id}/reset`)
+    await User.updateOne({id:id}, {"pulse": "0", "rgb":"0, 0, 0"}, { useFindAndModify: false })
+    const user = await User.findOne({id:id});
+    client.publish(`/lantern/${user.id}/reset`, JSON.stringify(user))
     res.send(`User ${id} pulse is now 0!`);
   } catch (error) {
     console.log('error', error);
@@ -125,8 +128,8 @@ exports.update = async (req, res) => {
   }
   const id = req.params.id;
   try {
-    await User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    const user = await User.findById(id);
+    await User.updateOne({id:id}, req.body, { useFindAndModify: false })
+    const user = await User.findOne({id:id});
     client.publish(`/lantern/${user.id}/audio/ignite`, user.pulse.toString())
     client.publish(`/lanterns/${user.id}/isactive`, JSON.stringify(user))
     res.send(`User ${id} updated successful!`);
