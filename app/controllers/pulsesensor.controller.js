@@ -1,8 +1,6 @@
 const db = require("../models");
 const Pulsesensor = db.pulseSensors;
-const User = db.users;
 const client = db.mqtt;
-
 
 // RESET PULSE TO 0
 exports.resetAll = async (req, res) => {
@@ -44,7 +42,6 @@ exports.reset = async (req, res) => {
 
 // Create and Save a new user
 exports.create = async (req, res) => {
-  // Validate request
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
@@ -57,7 +54,7 @@ exports.create = async (req, res) => {
       universe: req.body.universe,
       state: req.body.state,
     });
-    await Pulsesensor.save(pulsesensor);
+    await pulsesensor.save(pulsesensor);
     res.send(pulsesensor);
   } catch (error) {
     console.error(error);
@@ -104,10 +101,10 @@ exports.update = async (req, res) => {
   }
   const id = req.params.id;
   try {
-    await Pulsesensor.findByIdAndUpdate(id, req.body, {
-      useFindAndModify: false
+    await Pulsesensor.updateOne({id:id}, req.body, {
+      useFindAndModify: true
     })
-    const puslesensor = await Pulsesensor.findById(id);
+    const puslesensor = await Pulsesensor.findOne({id:id});
     client.publish(`/bpmstation/${id}/state`, JSON.stringify(puslesensor))
     res.send(`PulseSensor ${id} updated successful!`);
   } catch (error) {
