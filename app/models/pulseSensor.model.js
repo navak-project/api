@@ -18,7 +18,7 @@ module.exports = mongoose => {
       rgb: {
         type: String,
         required: false,
-        default: '0,0,0'
+        default: '0,0,0,255'
       },
     })
   );
