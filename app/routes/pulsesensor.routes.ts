@@ -1,5 +1,5 @@
-module.exports = app => {
-  const pulsesensors = require("../controllers/pulsesensor.controller.js");
+module.exports = (app : any) => {
+  const pulsesensors = require("../controllers/pulsesensor.controller");
 
   var router = require("express").Router();
 

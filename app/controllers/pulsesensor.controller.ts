@@ -1,15 +1,16 @@
-const db = require("../models");
+export {};
+const db: any = require("../models");
 const Pulsesensor = db.pulseSensors;
 const client = db.mqtt;
 
 // RESET PULSE TO 0
-exports.resetAll = async (req, res) => {
+exports.resetAll = async (req : any, res : any) => {
   try {
     const options = {
       upsert: true
     };
     const allStation = await Pulsesensor.find();
-    allStation.forEach(async element => {
+    allStation.forEach(async (element:any) => {
       await Pulsesensor.updateOne({
         _id: element._id
       }, { "state": 0 }, options);
@@ -25,7 +26,7 @@ exports.resetAll = async (req, res) => {
 
 
 // RESET ONE PULSE TO 0
-exports.reset = async (req, res) => {
+exports.reset = async (req : any, res : any) => {
   const id = req.params.id;
   try {
     await Pulsesensor.findByIdAndUpdate(id, {
@@ -41,7 +42,7 @@ exports.reset = async (req, res) => {
 }
 
 // Create and Save a new user
-exports.create = async (req, res) => {
+exports.create = async (req : any, res : any) => {
   if (!req.body) {
     res.status(400).send({
       message: "Content can not be empty!"
@@ -65,7 +66,7 @@ exports.create = async (req, res) => {
 };
 
 // Retrieve all Users from the database.
-exports.findAll = async (req, res) => {
+exports.findAll = async (req : any, res : any) => {
   console.log(req);
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
@@ -80,7 +81,7 @@ exports.findAll = async (req, res) => {
 };
 
 // Find a single User with an id
-exports.findOne = async (req, res) => {
+exports.findOne = async (req : any, res : any) => {
   const id = req.params.id;
   try {
     const pulsesensor = await Pulsesensor.findOne({ id: id });
@@ -93,7 +94,7 @@ exports.findOne = async (req, res) => {
 };
 
 // Update a User by the id in the request
-exports.update = async (req, res) => {
+exports.update = async (req : any, res : any) => {
   if (!req.body) {
     return res.status(400).send({
       message: "Data to update can not be empty!"
@@ -116,7 +117,7 @@ exports.update = async (req, res) => {
 };
 
 // Delete a User with the specified id in the request
-exports.delete = async (req, res) => {
+exports.delete = async (req : any, res : any) => {
   const id = req.params.id;
   try {
     await Pulsesensor.findByIdAndRemove(id)
@@ -130,7 +131,7 @@ exports.delete = async (req, res) => {
 };
 
 // Delete all Users from the database.
-exports.deleteAll = async (req, res) => {
+exports.deleteAll = async (req : any, res : any) => {
   try {
     await Pulsesensor.deleteMany({})
     res.send(`Database deleted successful!`);
