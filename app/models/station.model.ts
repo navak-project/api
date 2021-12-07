@@ -1,6 +1,6 @@
-module.exports = mongoose => {
-  const Pulsesensor = mongoose.model(
-    "pulsesensor",
+module.exports = (mongoose: any) => {
+  const Station = mongoose.model(
+    "station",
     mongoose.Schema({
       id: {
         type: String,
@@ -22,5 +22,5 @@ module.exports = mongoose => {
       },
     })
   );
-  return Pulsesensor;
+  return Station;
 };
