@@ -33,12 +33,17 @@ module.exports = (mongoose: any) => {
     type: String,
     required: false,
     default: 'rgb(0,0,0)'
-   },
+     },
    status:{
        type: Boolean,
        required: false,
        default: false
-   }
+     },
+   group:{
+    type: Number,
+    required: true,
+    default: 1
+   },
  })
   );
   return User;

@@ -97,7 +97,7 @@ exports.update = async (req : any, res : any) => {
       useFindAndModify: true
     })
     const puslesensor = await Station.findOne({id:id});
-    client.publish(`/bpmstation/${id}/state`, JSON.stringify(puslesensor))
+    client.publish(`/station/${id}/state`, JSON.stringify(puslesensor))
     res.send(`Station ${id} updated successful!`);
   } catch (error) {
     console.log('error', error);

@@ -39,10 +39,10 @@ exports.reset = async (req : any, res : any) => {
   }
 }
 
-exports.randomUser = async (req : any, res : any) => {
+exports.randomUser = async (req: any, res: any) => {
   const color = await randomColor.getRandomColor();
   try {
-    const filter = { pulse: 0 };
+    const filter = { pulse: 0, group: req.params.id };
     const allAvailableUser = await User.find(filter);
     if (allAvailableUser.length <= 0) {
       return res.status(400).send({

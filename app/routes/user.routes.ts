@@ -10,7 +10,7 @@ module.exports = (app : any) => {
   router.put("/reset/:id", users.reset);
 
   // Return random user with pulse sended
-  router.get("/randomUser/", users.randomUser);
+  router.get("/randomUser/:id", users.randomUser);
 
   // Create a new User
   router.post("/", users.create);
