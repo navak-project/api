@@ -1,17 +1,14 @@
-
-export {};
 import { db } from '../models';
 const User = db.users
 const client = db.mqtt;
 const randomColor = require('../utils');
 
-// RESET PULSE TO 0
 exports.resetAll = async (req : any, res : any) => {
   try {
     const options = { upsert: true };
     const allUser = await User.find();
     allUser.forEach(async (element : any) => {
-      //const thisUser = await User.findOne({id:id});
+
       await User.updateOne({id:element.id}, {"pulse":"0", "rgb": "0, 0, 0, 0" }, options)
       const thisUser = await User.findOne({id:element.id})
       client.publish(`/lantern/${thisUser.id}/reset`, JSON.stringify(thisUser))
@@ -26,7 +23,6 @@ exports.resetAll = async (req : any, res : any) => {
   }
 }
 
-// RESET ONE PULSE TO 0
 exports.reset = async (req : any, res : any) => {
   const id = req.params.id;
   try {
@@ -43,10 +39,8 @@ exports.reset = async (req : any, res : any) => {
   }
 }
 
-//SEND A RANDOMUSER WITH PULSE 0 WITH A RECEIVED PULSE VALUE 
 exports.randomUser = async (req : any, res : any) => {
   const color = await randomColor.getRandomColor();
-  //global.color = color;
   try {
     const filter = { pulse: 0 };
     const allAvailableUser = await User.find(filter);
@@ -61,7 +55,6 @@ exports.randomUser = async (req : any, res : any) => {
       $set: { rgb: color },
      };
     await User.updateOne({_id: picked._id}, updateDoc, options);
-    //console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,);
     const user = await User.findById(picked._id);
     res.send(user);
   } catch (error) {
@@ -71,7 +64,6 @@ exports.randomUser = async (req : any, res : any) => {
   }
 }
 
-// Create and Save a new user
 exports.create = async (req : any, res : any) => {
   // Validate request
   if (!req.body) {
@@ -85,7 +77,6 @@ exports.create = async (req : any, res : any) => {
       ipAddress: req.body.ipAddress,
     });
     await user.save(user);
-    console.log('user', user);
     res.send(user);
   } catch (error) {
     console.error(error);
@@ -95,7 +86,6 @@ exports.create = async (req : any, res : any) => {
   }
 };
 
-// Retrieve all Users from the database.
 exports.findAll = async (req : any, res : any) => {
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
@@ -109,7 +99,6 @@ exports.findAll = async (req : any, res : any) => {
   }
 };
 
-// Find a single User with an id
 exports.findOne = async (req : any, res : any) => {
   const id = req.params.id;
   try {
@@ -122,7 +111,6 @@ exports.findOne = async (req : any, res : any) => {
   }
 };
 
-// Update a User by the id in the request
 exports.update = async (req : any, res : any) => {
   if (!req.body) {
     return res.status(400).send({
@@ -135,7 +123,6 @@ exports.update = async (req : any, res : any) => {
     const user = await User.findOne({id:id});
     client.publish(`/lantern/${user.id}/audio/ignite`, user.pulse.toString())
     client.publish(`/lanterns/isactive`, JSON.stringify(user))
-    //client.publish(`api/users/${user.id}/active`, JSON.stringify(user))
     res.send(`User ${id} updated successful!`);
   } catch (error) {
     console.log('error', error);
@@ -145,7 +132,6 @@ exports.update = async (req : any, res : any) => {
   }
 };
 
-// Delete a User with the specified id in the request
 exports.delete = async (req : any, res : any) => {
   const id = req.params.id;
   try {
@@ -159,7 +145,6 @@ exports.delete = async (req : any, res : any) => {
   }
 };
 
-// Delete all Users from the database.
 exports.deleteAll = async (req : any, res : any) => {
   try {
     await User.deleteMany({})

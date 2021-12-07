@@ -1,9 +1,7 @@
-export {};
 import { db } from '../models';
 const Pulsesensor = db.pulseSensors;
 const client = db.mqtt;
 
-// RESET PULSE TO 0
 exports.resetAll = async (req : any, res : any) => {
   try {
     const options = {
@@ -24,8 +22,6 @@ exports.resetAll = async (req : any, res : any) => {
   }
 }
 
-
-// RESET ONE PULSE TO 0
 exports.reset = async (req : any, res : any) => {
   const id = req.params.id;
   try {
@@ -41,7 +37,6 @@ exports.reset = async (req : any, res : any) => {
   }
 }
 
-// Create and Save a new user
 exports.create = async (req : any, res : any) => {
   if (!req.body) {
     res.status(400).send({
@@ -65,9 +60,7 @@ exports.create = async (req : any, res : any) => {
   }
 };
 
-// Retrieve all Users from the database.
 exports.findAll = async (req : any, res : any) => {
-  console.log(req);
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
   try {
@@ -80,7 +73,6 @@ exports.findAll = async (req : any, res : any) => {
   }
 };
 
-// Find a single User with an id
 exports.findOne = async (req : any, res : any) => {
   const id = req.params.id;
   try {
@@ -93,7 +85,6 @@ exports.findOne = async (req : any, res : any) => {
   }
 };
 
-// Update a User by the id in the request
 exports.update = async (req : any, res : any) => {
   if (!req.body) {
     return res.status(400).send({
@@ -116,7 +107,6 @@ exports.update = async (req : any, res : any) => {
   }
 };
 
-// Delete a User with the specified id in the request
 exports.delete = async (req : any, res : any) => {
   const id = req.params.id;
   try {
@@ -130,7 +120,6 @@ exports.delete = async (req : any, res : any) => {
   }
 };
 
-// Delete all Users from the database.
 exports.deleteAll = async (req : any, res : any) => {
   try {
     await Pulsesensor.deleteMany({})
