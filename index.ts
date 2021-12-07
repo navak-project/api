@@ -33,7 +33,7 @@ async function run(): Promise<void> {
 const PORT = process.env.PORT || 8080;
 
 require("./app/routes/user.routes")(app);
-require("./app/routes/pulsesensor.routes")(app);
+require("./app/routes/station.routes")(app);
 
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}.`);

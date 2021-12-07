@@ -7,7 +7,7 @@ const db = {} as any;
 db.mongoose = mongoose;
 db.url = dbConfig.url;
 db.users = require("./user.model")(mongoose);
-db.pulseSensors = require("./pulsesensor.model")(mongoose);
+db.stations = require("./station.model")(mongoose);
 db.mqtt = require("./mqtt.model")();
 
 export { db };

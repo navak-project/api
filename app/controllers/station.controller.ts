@@ -1,5 +1,5 @@
 import { db } from '../models';
-const Pulsesensor = db.pulseSensors;
+const Station = db.stations;
 const client = db.mqtt;
 
 exports.resetAll = async (req : any, res : any) => {
@@ -7,9 +7,9 @@ exports.resetAll = async (req : any, res : any) => {
     const options = {
       upsert: true
     };
-    const allStation = await Pulsesensor.find();
+    const allStation = await Station.find();
     allStation.forEach(async (element:any) => {
-      await Pulsesensor.updateOne({
+      await Station.updateOne({
         _id: element._id
       }, { "state": 0 }, options);
     });
@@ -25,7 +25,7 @@ exports.resetAll = async (req : any, res : any) => {
 exports.reset = async (req : any, res : any) => {
   const id = req.params.id;
   try {
-    await Pulsesensor.findByIdAndUpdate(id, {
+    await Station.findByIdAndUpdate(id, {
       "state": 0
     }, { useFindAndModify: false })
     res.send(`Pulse Sensor ${id} stae is now 0!`);
@@ -45,13 +45,13 @@ exports.create = async (req : any, res : any) => {
     return;
   }
   try {
-    const pulsesensor = new Pulsesensor({
+    const station = new Station({
       id: req.body.id,
       universe: req.body.universe,
       state: req.body.state,
     });
-    await pulsesensor.save(pulsesensor);
-    res.send(pulsesensor);
+    await station.save(station);
+    res.send(station);
   } catch (error) {
     console.error(error);
     res.status(500).send({
@@ -64,7 +64,7 @@ exports.findAll = async (req : any, res : any) => {
   const title = req.query.title;
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
   try {
-    const data = await Pulsesensor.find(condition);
+    const data = await Station.find(condition);
     res.send(data);
   } catch (error) {
     res.status(500).send({
@@ -76,8 +76,8 @@ exports.findAll = async (req : any, res : any) => {
 exports.findOne = async (req : any, res : any) => {
   const id = req.params.id;
   try {
-    const pulsesensor = await Pulsesensor.findOne({ id: id });
-    res.send(pulsesensor);
+    const station = await Station.findOne({ id: id });
+    res.send(station);
   } catch (error) {
     res.status(500).send({
       message: error
@@ -93,12 +93,12 @@ exports.update = async (req : any, res : any) => {
   }
   const id = req.params.id;
   try {
-    await Pulsesensor.updateOne({id:id}, req.body, {
+    await Station.updateOne({id:id}, req.body, {
       useFindAndModify: true
     })
-    const puslesensor = await Pulsesensor.findOne({id:id});
+    const puslesensor = await Station.findOne({id:id});
     client.publish(`/bpmstation/${id}/state`, JSON.stringify(puslesensor))
-    res.send(`PulseSensor ${id} updated successful!`);
+    res.send(`Station ${id} updated successful!`);
   } catch (error) {
     console.log('error', error);
     res.status(500).send({
@@ -110,8 +110,8 @@ exports.update = async (req : any, res : any) => {
 exports.delete = async (req : any, res : any) => {
   const id = req.params.id;
   try {
-    await Pulsesensor.findByIdAndRemove(id)
-    res.send(`Pulsesensor ${id} deleted successful!`);
+    await Station.findByIdAndRemove(id)
+    res.send(`Station ${id} deleted successful!`);
   } catch (error) {
     console.log('error', error);
     res.status(500).send({
@@ -122,7 +122,7 @@ exports.delete = async (req : any, res : any) => {
 
 exports.deleteAll = async (req : any, res : any) => {
   try {
-    await Pulsesensor.deleteMany({})
+    await Station.deleteMany({})
     res.send(`Database deleted successful!`);
   } catch (error) {
     console.log('error', error);
