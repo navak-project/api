@@ -10,4 +10,4 @@ db.users = require("./user.model")(mongoose);
 db.pulseSensors = require("./pulsesensor.model")(mongoose);
 db.mqtt = require("./mqtt.model")();
 
-export {db};
+export { db };

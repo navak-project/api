@@ -1,5 +1,5 @@
 export {};
-const db: any = require("../models");
+import { db } from '../models';
 const Pulsesensor = db.pulseSensors;
 const client = db.mqtt;
 

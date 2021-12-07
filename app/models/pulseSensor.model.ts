@@ -1,4 +1,4 @@
-module.exports = (mongoose:any) => {
+module.exports = (mongoose: any) => {
   const Pulsesensor = mongoose.model(
     "pulsesensor",
     mongoose.Schema({

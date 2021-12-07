@@ -1,6 +1,6 @@
 
 export {};
-const db: any = require("../models");
+import { db } from '../models';
 const User = db.users
 const client = db.mqtt;
 const randomColor = require('../utils');
