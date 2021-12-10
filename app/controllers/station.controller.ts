@@ -85,7 +85,7 @@ exports.findOne = async (req : any, res : any) => {
   }
 };
 
-exports.update = async (req : any, res : any) => {
+exports.update = async (req: any, res: any) => {
   if (!req.body) {
     return res.status(400).send({
       message: "Data to update can not be empty!"
@@ -96,7 +96,8 @@ exports.update = async (req : any, res : any) => {
     await Station.updateOne({id:id}, req.body, {
       useFindAndModify: true
     })
-    const puslesensor = await Station.findOne({id:id});
+    const puslesensor = await Station.findOne({ id: id });
+    console.log(puslesensor);
     client.publish(`/station/${id}/state`, JSON.stringify(puslesensor))
     res.send(`Station ${id} updated successful!`);
   } catch (error) {

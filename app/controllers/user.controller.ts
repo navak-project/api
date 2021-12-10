@@ -5,13 +5,13 @@ const randomColor = require('../utils');
 
 exports.resetAll = async (req : any, res : any) => {
   try {
-    const options = { upsert: true };
+    const options = { upsert: false };
     const allUser = await User.find();
     allUser.forEach(async (element : any) => {
 
       await User.updateOne({id:element.id}, {"pulse":"0", "rgb": "0, 0, 0, 0" }, options)
       const thisUser = await User.findOne({id:element.id})
-      client.publish(`/lantern/${thisUser.id}/reset`, JSON.stringify(thisUser))
+      client.publish(`/lanterns/${thisUser.id}/reset`, JSON.stringify(thisUser))
       console.log(thisUser);
     });
     res.send("All pulse are now set to 0");
@@ -111,7 +111,7 @@ exports.findOne = async (req : any, res : any) => {
   }
 };
 
-exports.update = async (req : any, res : any) => {
+exports.update = async (req: any, res: any) => {
   if (!req.body) {
     return res.status(400).send({
       message: "Data to update can not be empty!"
@@ -120,7 +120,7 @@ exports.update = async (req : any, res : any) => {
   const id = req.params.id;
   try {
     await User.updateOne({id:id}, req.body, { useFindAndModify: false })
-    const user = await User.findOne({id:id});
+    const user = await User.findOne({ id: id });
     client.publish(`/lantern/${user.id}/audio/ignite`, user.pulse.toString())
     client.publish(`/lanterns/isactive`, JSON.stringify(user))
     res.send(`User ${id} updated successful!`);
