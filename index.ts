@@ -2,8 +2,8 @@ import express from "express";
 const app = express();
 import ping from 'ping';
 import cors from 'cors';
-import {pulseOSC} from './app/utils';
 import {connect} from 'mongoose';
+import { pingLanterns } from './app/utils';
 
 var corsOptions = {
   origin: "http://localhost:8081"
@@ -46,31 +46,6 @@ require("./app/routes/station.routes")(app);
 app.listen(PORT, async () => {
   console.log(`Server is running on port ${PORT}.`);
   setInterval(() => {
-    GetAllActive();
+    pingLanterns();
   }, 5000);
 });
-
-async function GetAllActive() {
-  var query = {status : true};
-  try {
-      
-      const allActive = await db.lanterns.find(query);
-      allActive.forEach((lantern: any) => {
-          ping.sys.probe(lantern['ipAddress'], (status : any) => {
-            if(!status){
-              UpdateState(lantern['ipAddress']);
-            }
-          }, pingcfg);
-        });
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function UpdateState(ipAddress : any) {
-  var query = {ipAddress: ipAddress};
-  var newValues = {status: false};
-  const target = await db.lanterns.findOneAndUpdate(query, newValues);
-  console.log(`Lantern [ID: ${target.id} | IP: ${target.ipAddress} | MAC: ${target.macAddress}] is Offline!`);
-  pulseOSC();
-}

@@ -1,22 +1,25 @@
 import {db} from '../models';
-import {getRandomColor, pulseOSC} from '../utils';
+import {getRandomColor} from '../utils';
 const Lantern = db.lanterns;
 const client = db.mqtt;
 
 exports.reboot = async (req: any, res: any) => {
-	console.log(req.body);
+	console.log('reboot', req.body);
 	try {
 		client.publish(`/lanterns/${req.body}/reboot`);
   } catch (err) { }
-  res.send(`Rebooted ${req.body.id}`);
+
+  setTimeout(() => {
+    res.send(`Rebooted ${req.body.id}`);
+  }, 500);
 };
 
 exports.flash = async (req: any, res: any) => {
-	console.log(req.body);
+	console.log('flash', req.body);
 	try {
 		client.publish(`/lanterns/${req.body}/flash`);
   } catch (err) { }
-  res.send(`Flashed ${req.body.id} !`);
+    res.send(`Flashed ${req.body.id} !`);
 };
 
 exports.resetAll = async (req: any, res: any) => {
@@ -56,7 +59,9 @@ exports.reset = async (req: any, res: any) => {
 };
 
 exports.randomUser = async (req: any, res: any) => {
+	console.log('req', req);
 	const color = await getRandomColor();
+	console.log('color', color);
 	try {
 		const filter = {pulse: 0, group: req.params.id};
 		const allAvailableUser = await Lantern.find(filter);
@@ -163,7 +168,6 @@ exports.updateStatus = async (req: any, res: any) => {
 		const target = await Lantern.findOneAndUpdate(query, newValues);
 		console.log(`Lantern [ID: ${target.id} | IP: ${target.ipAddress} | MAC: ${target.macAddress}] is Online!`);
 		res.send(`Lantern ${target['ipAddress']} is Online!`);
-		pulseOSC();
 	} catch (error) {
 		console.log('error', error);
 		res.status(500).send({
