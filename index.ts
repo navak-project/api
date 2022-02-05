@@ -1,9 +1,9 @@
+require('dotenv').config()
 import express from 'express';
 const app = express();
-import ping from 'ping';
 import cors from 'cors';
 import {connect} from 'mongoose';
-import {pingLanterns} from './app/utils';
+import {pingLanterns , register} from './app/utils';
 var cron = require('node-cron');
 
 var corsOptions = {
@@ -42,9 +42,14 @@ const PORT = process.env.PORT || 8080;
 require('./app/routes/lantern.routes')(app);
 require('./app/routes/station.routes')(app);
 
+// default path
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
 app.listen(PORT, async () => {
-	console.log(`Server is running on port ${PORT}.`);
+  console.log(`Server is running on port ${PORT}.`);
 	cron.schedule('*/5 * * * * *', async function () {
-		await pingLanterns();
-	});
+	  await pingLanterns();
+  });
 });
