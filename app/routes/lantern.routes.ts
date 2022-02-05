@@ -13,11 +13,16 @@ module.exports = (app : any) => {
   router.get("/randomUser/:id", lanterns.randomUser);
 
   // Create a new User
-
   router.post("/register", lanterns.create);
 
   // Retrieve all active
   router.get("/active", lanterns.findActive);
+
+  //Reboot lanterns
+  router.post("/reboot", lanterns.reboot);
+
+  //Flash lanterns
+  router.post("/flash", lanterns.flash);
 
   // Retrieve all lanterns
   router.get("/", lanterns.findAll);
@@ -26,7 +31,10 @@ module.exports = (app : any) => {
   router.get("/:id", lanterns.findOne);
 
   // Update a User with id
-  router.put("/:id", lanterns.update);
+  // router.put("/:id", lanterns.update);
+
+  //Update status
+  router.put("/updateStatus", lanterns.updateStatus);
 
   // Delete a User with id
   router.delete("/:id", lanterns.delete);
