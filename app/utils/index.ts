@@ -50,9 +50,11 @@ export async function pingLanterns() {
 				async (status: any) => {
 					await db.lanterns.findOneAndUpdate(query, {"status": status});
 					if (!status) {
+						console.log('lantern', lantern);
+						await db.lanterns.updateOne({id: lantern.id}, {pulse: '0', rgb: '0, 0, 0, 0'}, {useFindAndModify: false});
 						console.log(`🔴 Lantern [ID: ${lantern.id} | IP: ${lantern.ipAddress} | MAC: ${lantern.macAddress}] is Offline!`);
 					} else {
-						console.log(`🟢 Lantern [ID: ${lantern.id} | IP: ${lantern.ipAddress} | MAC: ${lantern.macAddress}] is Offline!`);
+						console.log(`🟢 Lantern [ID: ${lantern.id} | IP: ${lantern.ipAddress} | MAC: ${lantern.macAddress}] is Online!`);
 					}
 				},
 				pingcfg
