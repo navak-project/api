@@ -31,7 +31,7 @@ module.exports = (app : any) => {
   router.get("/:id", lanterns.findOne);
 
   // Update a User with id
-  // router.put("/:id", lanterns.update);
+   router.put("/:id", lanterns.update);
 
   //Update status
   router.put("/updateStatus", lanterns.updateStatus);
