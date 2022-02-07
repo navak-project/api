@@ -6,20 +6,25 @@ const client = db.mqtt;
 exports.reboot = async (req: any, res: any) => {
 	console.log('reboot', req.body);
 	try {
-		client.publish(`/lanterns/${req.body}/reboot`);
+		client.publish(`/lanterns/${req.body.id}/reboot`, '{"reboot":{"state":1}}');
   } catch (err) { }
+  	res.send(`Rebooted ${req.body.id}`);
+	setTimeout(() => {
+		client.publish(`/lanterns/${req.body.id}/reboot`, '{"reboot":{"state":0}}');
 
-  setTimeout(() => {
-    res.send(`Rebooted ${req.body.id}`);
-  }, 500);
+  }, 1000);
 };
 
 exports.flash = async (req: any, res: any) => {
 	console.log('flash', req.body);
 	try {
-		client.publish(`/lanterns/${req.body}/flash`);
+		client.publish(`/lanterns/${req.body.id}/flash`,'{"flash":{"state":1}}');
   } catch (err) { }
-    res.send(`Flashed ${req.body.id} !`);
+	res.send(`Flashed ${req.body.id} !`);
+	setTimeout(() => {
+		client.publish(`/lanterns/${req.body.id}/flash`,'{"flash":{"state":0}}');	
+	}, 3000);
+	
 };
 
 exports.resetAll = async (req: any, res: any) => {
@@ -44,7 +49,7 @@ exports.resetAll = async (req: any, res: any) => {
 exports.reset = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
-		await Lantern.updateOne({id: id}, {pulse: '0', rgb: '0, 0, 0, 0'}, {useFindAndModify: false});
+		await Lantern.updateOne({id: id}, {pulse: '0', rgb: '0, 0, 0, 1'}, {useFindAndModify: false});
 		const user = await Lantern.findOne({id: id});
 		console.log(user);
 		client.publish(`/lantern/${user.id}/audio/extinguish`);

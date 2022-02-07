@@ -48,7 +48,9 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-  console.log(`Server is running on port ${PORT}.`);
+	var ip = require('ip').address();
+	const address = `${ip}:${process.env.PORT}`
+  console.log(`Server is running on ${address}.`);
 	cron.schedule('*/5 * * * * *', async function () {
 	await pingLanterns();
   });
