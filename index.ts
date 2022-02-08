@@ -3,16 +3,12 @@ import express from 'express';
 const app = express();
 import cors from 'cors';
 import {connect} from 'mongoose';
-import {pingLanterns , register} from './app/utils';
+import { pingLanterns, mqttInit } from './app/utils';
+
 var cron = require('node-cron');
 
 var corsOptions = {
 	origin: 'http://localhost:8081'
-};
-
-var pingcfg = {
-	timeout: 2,
-	extra: ['-i', '2']
 };
 
 app.use(cors(corsOptions));
@@ -30,7 +26,7 @@ run().catch((err) => console.log(err));
 async function run(): Promise<void> {
 	try {
 		await connect(db.url);
-		console.log('Connected to the database!');
+		console.log(`💾 Connected to the database: ${db.url}`);
 	} catch (err) {
 		console.log(err);
 		process.exit();
@@ -48,9 +44,8 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-	var ip = require('ip').address();
-	const address = `${ip}:${process.env.PORT}`
-  console.log(`Server is running on ${address}.`);
+	await mqttInit();
+  	console.log(`💻 Server is running: ${require('ip').address()}:${process.env.PORT}`);
 	cron.schedule('*/5 * * * * *', async function () {
 	await pingLanterns();
   });

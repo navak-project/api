@@ -21,7 +21,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon -e ts -w ./ -x npm run watch:serve",
-    "watch:serve": "ts-node index.ts"
+    "watch:serve": "ts-node index.ts",
+    "start": "tsc && node dist/app.js"
   },
   "repository": "git+https://github.com/navak-project/api.git",
   "author": "John <john.olivierb@gmail.com>",

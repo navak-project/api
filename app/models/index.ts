@@ -8,6 +8,5 @@ db.mongoose = mongoose;
 db.url = dbConfig.url;
 db.lanterns = require("./lantern.model")(mongoose);
 db.stations = require("./station.model")(mongoose);
-db.mqtt = require("./mqtt.model")();
 
 export { db };
