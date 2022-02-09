@@ -182,6 +182,7 @@ exports.updateStatus = async (req: any, res: any) => {
 };
 
 exports.update = async (req: any, res: any) => {
+  console.log(req.body);
 	if (!req.body) {
 		return res.status(400).send({
 			message: 'Data to update can not be empty!'
@@ -190,9 +191,9 @@ exports.update = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
 		await Lantern.updateOne({id: id}, req.body, {useFindAndModify: false});
-		const lantern = await Lantern.findOne({ id: id });
+    const lantern = await Lantern.findOne({ id: id });
 		client.publish(`/lantern/${lantern.id}/audio/ignite`, lantern.pulse.toString())
-		client.publish(`/lanterns/isactive`, JSON.stringify(lantern))
+    client.publish(`/lanterns/isactive`, JSON.stringify(lantern))
 		res.send(`Lantern ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);

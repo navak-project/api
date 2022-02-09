@@ -3,7 +3,7 @@ import express from 'express';
 const app = express();
 import cors from 'cors';
 import {connect} from 'mongoose';
-import { pingLanterns, mqttInit } from './app/utils';
+import { pingLanterns } from './app/utils';
 
 var cron = require('node-cron');
 
@@ -37,6 +37,7 @@ const PORT = process.env.PORT || 8080;
 
 require('./app/routes/lantern.routes')(app);
 require('./app/routes/station.routes')(app);
+require('./app/routes/position.routes')(app);
 
 // default path
 app.get('/', (req, res) => {
@@ -44,7 +45,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-	await mqttInit();
+//	await mqttInit();
   	console.log(`💻 Server is running: ${require('ip').address()}:${process.env.PORT}`);
 	cron.schedule('*/5 * * * * *', async function () {
 	await pingLanterns();

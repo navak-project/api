@@ -2,7 +2,7 @@ const colorsys = require('colorsys');
 import ping from 'ping';
 const db = require('../models').db;
 
-export async function mqttInit() {
+/*export async function mqttInit() {
 	var mqtt = require('mqtt')
 	const host = '192.168.1.212'
 	const port = '1883'
@@ -13,7 +13,7 @@ export async function mqttInit() {
 		console.log(`🔗 Connected to MQTT: mqtt://${client.host}:${client.port}`)
 	})
 	return client;
-}
+}*/
 
 /**
  * Get a random RGB color
