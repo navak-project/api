@@ -2,18 +2,15 @@ module.exports = (app : any) => {
   const positions = require("../controllers/position.controller");
 
   var router = require("express").Router();
-
-  // Reset all pulse to 0
-  router.post("/reset/", positions.resetAll);
-
-  // Reset one pulse to 0
-  router.put("/reset/:id", positions.reset);
-
+  
   // Create a new User
   router.post("/", positions.create);
 
   // Retrieve all positions
   router.get("/", positions.findAll);
+
+  // Return position of the tag
+  router.get("/snap", positions.getPosition);
 
   // Retrieve a single User with id
   router.get("/:id", positions.findOne);

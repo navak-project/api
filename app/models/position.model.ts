@@ -11,10 +11,20 @@ module.exports = (mongoose: any) => {
 				type: String,
 				required: true
       },
-      position: {
+      x: {
         type: String,
         required: true,
-        default: '0,0,0'
+        default: '0'
+      },
+      y: {
+        type: String,
+        required: true,
+        default: '0'
+      },
+      z: {
+        type: String,
+        required: true,
+        default: '0'
       },
       size: {
         type: String,
