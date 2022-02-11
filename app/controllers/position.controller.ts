@@ -30,13 +30,22 @@ exports.create = async (req : any, res : any) => {
     return;
   }
   try {
-    const station = new Position({
+    const position = new Position({
       id: req.body.id,
-      universe: req.body.universe,
-      state: req.body.state,
+      name: req.body.name,
+      x: req.body.x,
+      y: req.body.y,
+      z: req.body.z,
+      size: req.body.size,
     });
-    await station.save(station);
-    res.send(station);
+    const existing = await Position.findOne({ id: req.body.id });
+    if (existing) {
+       return res.status(409).send({message: 'Email is already taken.'})
+    } else {
+      await position.save(position);
+      res.send(position);     
+    }
+
   } catch (error) {
     console.error(error);
     res.status(500).send({
@@ -61,8 +70,8 @@ exports.findAll = async (req : any, res : any) => {
 exports.findOne = async (req : any, res : any) => {
   const id = req.params.id;
   try {
-    const station = await Position.findOne({ id: id });
-    res.send(station);
+    const position = await Position.findOne({ id: id });
+    res.send(position);
   } catch (error) {
     res.status(500).send({
       message: error
@@ -95,7 +104,7 @@ exports.update = async (req: any, res: any) => {
 exports.delete = async (req : any, res : any) => {
   const id = req.params.id;
   try {
-    await Position.findByIdAndRemove(id)
+    await Position.findOneAndDelete({id: id})
     res.send(`Position ${id} deleted successful!`);
   } catch (error) {
     console.log('error', error);

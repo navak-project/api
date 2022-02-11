@@ -22,6 +22,7 @@ module.exports = (app : any) => {
   router.delete("/:id", positions.delete);
 
   // Create a new User
+  
   router.delete("/", positions.deleteAll);
 
   app.use('/api/positions', router);
