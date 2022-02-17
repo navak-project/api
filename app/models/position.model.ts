@@ -31,6 +31,11 @@ module.exports = (mongoose: any) => {
         required: true,
         default: '0.0'
       },
+      group: {
+        type: String,
+        required: true,
+        default: '0'
+      },
 		
 		})
 	);

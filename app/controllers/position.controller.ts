@@ -1,14 +1,15 @@
-import {db} from '../models';
+import { db } from '../models';
+import { client } from '../utils/mqtt';
 const Position = db.positions;
-const client = db.mqtt;
 
 let currentPosition : any;
-client.subscribe('dwm/node/d491/uplink/location');
+client.subscribe('dwm/node/+/uplink/location');
 
 client.on('message', function (topic: String, message: String) {
   currentPosition = message.toString()
 });
 exports.getPosition = async (req: any, res: any) => {
+  console.log("🚀 ~ file: position.controller.ts ~ line 14 ~ exports.getPosition= ~ currentPosition", currentPosition);
   res.send(currentPosition);
 };
 

@@ -4,8 +4,9 @@ const app = express();
 import cors from 'cors';
 import {connect} from 'mongoose';
 import { pingLanterns } from './app/utils';
-
+var mqtt = require('mqtt');
 var cron = require('node-cron');
+import { connectMqtt  } from './app/utils/mqtt'
 
 var corsOptions = {
 	origin: 'http://localhost:8081'
@@ -16,6 +17,7 @@ app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json());
 
+
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({extended: true}));
 
@@ -24,7 +26,7 @@ const db = require('./app/models').db;
 run().catch((err) => console.log(err));
 
 async function run(): Promise<void> {
-	try {
+  try {
 		await connect(db.url);
 		console.log(`💾 Connected to the database: ${db.url}`);
 	} catch (err) {
@@ -32,6 +34,17 @@ async function run(): Promise<void> {
 		process.exit();
 	}
 }
+
+mqttInit().catch((err) => console.log(err));
+async function mqttInit(): Promise<void> {
+  try {
+   connectMqtt();
+	} catch (err) {
+		console.log(err);
+		process.exit();
+	}
+}
+
 
 const PORT = process.env.PORT || 8080;
 
@@ -45,8 +58,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-//	await mqttInit();
-  	console.log(`💻 Server is running: ${require('ip').address()}:${process.env.PORT}`);
+  console.log(`💻 Server is running: ${require('ip').address()}:${process.env.PORT}`);
 	cron.schedule('*/5 * * * * *', async function () {
 	await pingLanterns();
   });

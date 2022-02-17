@@ -27,6 +27,8 @@ export async function getRandomColor(): Promise<string> {
 	return `${hsvToRgb.r}, ${hsvToRgb.g}, ${hsvToRgb.b}, ${255}`;
 }
 
+
+
 // register ip to the database servers
 export async function register(): Promise<void> {
 	var ip = require('ip').address();

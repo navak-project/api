@@ -1,3 +1,3 @@
 export = {
-  url: "mongodb://localhost:3001/meteor"
+  url: "mongodb://192.168.1.209:27017/navak"
 };
