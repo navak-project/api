@@ -10,7 +10,6 @@ client.on('message', function (topic: String, message: String) {
   if (topic === 'dwm/node/d491/uplink/location') { 
     toolPosition = message.toString()
   }
-  allPosition = message.toString()
 });
   
 exports.getToolPosition = async (req: any, res: any) => {
