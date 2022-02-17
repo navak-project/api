@@ -1,6 +1,6 @@
 import { db } from '../models';
 const Station = db.stations;
-const client = db.mqtt;
+import { client } from '../utils/mqtt';
 
 exports.resetAll = async (req : any, res : any) => {
   try {

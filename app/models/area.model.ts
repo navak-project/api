@@ -1,6 +1,6 @@
 module.exports = (mongoose: any) => {
-	const Position = mongoose.model(
-		'position',
+	const Area = mongoose.model(
+		'area',
 		mongoose.Schema({
 			id: {
 				type: String,
@@ -34,10 +34,10 @@ module.exports = (mongoose: any) => {
       group: {
         type: String,
         required: true,
-        default: '0'
+        default: '0.0'
       },
 		
 		})
 	);
-	return Position;
+	return Area;
 };

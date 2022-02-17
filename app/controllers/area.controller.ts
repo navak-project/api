@@ -1,16 +1,21 @@
 import { db } from '../models';
 import { client } from '../utils/mqtt';
-const Position = db.positions;
+const Area = db.areas;
 
-let currentPosition : any;
+let toolPosition: any;
+let allPosition: any;
+
 client.subscribe('dwm/node/+/uplink/location');
-
 client.on('message', function (topic: String, message: String) {
-  currentPosition = message.toString()
+  if (topic === 'dwm/node/d491/uplink/location') { 
+    toolPosition = message.toString()
+  }
+  allPosition = message.toString()
 });
-exports.getPosition = async (req: any, res: any) => {
-  console.log("🚀 ~ file: position.controller.ts ~ line 14 ~ exports.getPosition= ~ currentPosition", currentPosition);
-  res.send(currentPosition);
+  
+exports.getToolPosition = async (req: any, res: any) => {
+  console.log("🚀 ~ file: position.controller.ts ~ line 14 ~ exports.getPosition= ~ currentPosition", toolPosition);
+  res.send(toolPosition);
 };
 
 exports.create = async (req: any, res: any) => {
@@ -21,7 +26,7 @@ exports.create = async (req: any, res: any) => {
 		return;
 	}
 	try {
-		const position = new Position({
+		const position = new Area({
 			id: req.body.id,
 			name: req.body.name,
 			x: req.body.x,
@@ -29,7 +34,7 @@ exports.create = async (req: any, res: any) => {
 			z: req.body.z,
 			size: req.body.size
 		});
-		const existing = await Position.findOne({id: req.body.id});
+		const existing = await Area.findOne({id: req.body.id});
 		if (existing) {
 			return res.status(409).send({message: 'Email is already taken.'});
 		} else {
@@ -48,7 +53,7 @@ exports.findAll = async (req: any, res: any) => {
 	const title = req.query.title;
 	var condition = title ? {title: {$regex: new RegExp(title), $options: 'i'}} : {};
 	try {
-		const data = await Position.find(condition);
+		const data = await Area.find(condition);
 		res.send(data);
 	} catch (error) {
 		res.status(500).send({
@@ -60,7 +65,7 @@ exports.findAll = async (req: any, res: any) => {
 exports.findOne = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
-		const position = await Position.findOne({id: id});
+		const position = await Area.findOne({id: id});
 		res.send(position);
 	} catch (error) {
 		res.status(500).send({
@@ -79,10 +84,10 @@ exports.update = async (req: any, res: any) => {
 	const id = req.params.id;
 	console.log('id', id);
 	try {
-		await Position.updateOne({id: id}, req.body, {
+		await Area.updateOne({id: id}, req.body, {
 			useFindAndModify: true
 		});
-		res.send(`Position ${id} updated successful!`);
+		res.send(`Area ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);
 		res.status(500).send({
@@ -94,8 +99,8 @@ exports.update = async (req: any, res: any) => {
 exports.delete = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
-		await Position.findOneAndDelete({id: id});
-		res.send(`Position ${id} deleted successful!`);
+		await Area.findOneAndDelete({id: id});
+		res.send(`Area ${id} deleted successful!`);
 	} catch (error) {
 		console.log('error', error);
 		res.status(500).send({
@@ -106,7 +111,7 @@ exports.delete = async (req: any, res: any) => {
 
 exports.deleteAll = async (req: any, res: any) => {
 	try {
-		await Position.deleteMany({});
+		await Area.deleteMany({});
 		res.send(`Database deleted successful!`);
 	} catch (error) {
 		console.log('error', error);

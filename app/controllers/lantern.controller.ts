@@ -1,7 +1,7 @@
 import {db} from '../models';
 import {getRandomColor} from '../utils';
 const Lantern = db.lanterns;
-const client = db.mqtt;
+import { client } from '../utils/mqtt';
 
 exports.reboot = async (req: any, res: any) => {
 	console.log('reboot', req.body);

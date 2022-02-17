@@ -50,7 +50,7 @@ const PORT = process.env.PORT || 8080;
 
 require('./app/routes/lantern.routes')(app);
 require('./app/routes/station.routes')(app);
-require('./app/routes/position.routes')(app);
+require('./app/routes/area.routes')(app);
 
 // default path
 app.get('/', (req, res) => {

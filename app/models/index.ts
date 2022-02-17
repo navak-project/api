@@ -9,6 +9,6 @@ db.url = dbConfig.url;
 //db.mqtt = require("./mqtt.model")(mongoose);
 db.lanterns = require("./lantern.model")(mongoose);
 db.stations = require("./station.model")(mongoose);
-db.positions = require("./position.model")(mongoose);
+db.areas = require("./area.model")(mongoose);
 
 export { db };
