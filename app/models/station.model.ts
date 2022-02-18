@@ -6,6 +6,10 @@ module.exports = (mongoose: any) => {
         type: String,
         required: true
       },
+      ip: {
+        type: String,
+        required: true
+      },
       universe: {
         type: String,
         required: false
