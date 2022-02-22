@@ -1,19 +1,18 @@
 import { db } from '../models';
-import { client } from '../utils/mqtt';
+import { areas } from '../utils/mqtt';
 const Area = db.areas;
 
 let toolPosition: any;
-let allPosition: any;
 
-client.subscribe('dwm/node/+/uplink/location');
-client.on('message', function (topic: String, message: String) {
+areas.subscribe('dwm/node/d491/uplink/location');
+areas.on('message', function (topic: String, message: String) {
   if (topic === 'dwm/node/d491/uplink/location') { 
     toolPosition = message.toString()
   }
 });
   
 exports.getToolPosition = async (req: any, res: any) => {
-  console.log("🚀 ~ file: position.controller.ts ~ line 14 ~ exports.getPosition= ~ currentPosition", toolPosition);
+  //console.log("🚀 ~ file: position.controller.ts ~ line 14 ~ exports.getPosition= ~ currentPosition", toolPosition);
   res.send(toolPosition);
 };
 

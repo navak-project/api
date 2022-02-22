@@ -58,16 +58,15 @@ export async function pingLanterns() {
 		extra: ['-i', '2']
 	};
 	try {
-		const allLanterns = await db.lanterns.find(query);
+		const allLanterns = await db.lanterns.find();
 		allLanterns.forEach((lantern: any) => {
 			ping.sys.probe(
 				lantern['ipAddress'],
 				async (status: any) => {
-					await db.lanterns.findOneAndUpdate(query, {"status": status});
+					await db.lanterns.findOneAndUpdate({id:lantern.id}, {"status": status});
 					if (!status) {
-						console.log('lantern', lantern);
 						await db.lanterns.updateOne({id: lantern.id}, {pulse: '0', rgb: '0, 0, 0, 0'}, {useFindAndModify: false});
-						console.log(`🔴 Lantern [ID: ${lantern.id} | IP: ${lantern.ipAddress} | MAC: ${lantern.macAddress}] is Offline!`);
+					//	console.log(`🔴 Lantern [ID: ${lantern.id} | IP: ${lantern.ipAddress} | MAC: ${lantern.macAddress}] is Offline!`);
 					} else {
 						//console.log(`🟢 Lantern [ID: ${lantern.id} | IP: ${lantern.ipAddress} | MAC: ${lantern.macAddress}] is Online!`);
 					}

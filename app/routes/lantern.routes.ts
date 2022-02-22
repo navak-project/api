@@ -12,6 +12,9 @@ module.exports = (app : any) => {
   // Return random user with pulse sended
   router.get("/randomUser/:id", lanterns.randomUser);
 
+  // Return lanterns live position
+  router.get("/positions/:id", lanterns.getLivePosition);
+
   // Create a new User
   router.post("/register", lanterns.create);
 

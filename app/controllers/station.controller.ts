@@ -1,6 +1,6 @@
 import { db } from '../models';
 const Station = db.stations;
-import { client } from '../utils/mqtt';
+import { stations } from '../utils/mqtt';
 
 exports.resetAll = async (req : any, res : any) => {
   try {
@@ -98,7 +98,7 @@ exports.update = async (req: any, res: any) => {
     })
     const puslesensor = await Station.findOne({ id: id });
     console.log(puslesensor);
-    client.publish(`/station/${id}/state`, JSON.stringify(puslesensor))
+    stations.publish(`/station/${id}/state`, JSON.stringify(puslesensor))
     res.send(`Station ${id} updated successful!`);
   } catch (error) {
     console.log('error', error);

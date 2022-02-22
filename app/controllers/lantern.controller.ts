@@ -1,28 +1,53 @@
 import {db} from '../models';
 import {getRandomColor} from '../utils';
 const Lantern = db.lanterns;
-import { client } from '../utils/mqtt';
+import { lanterns } from '../utils/mqtt';
+
+let livePosition: any;
+let liveTopic: any;
+let id : any
+
+lanterns.on('message', function (topic: String, message: String) {
+  livePosition = message.toString();
+  liveTopic = topic
+});
+ lanterns.unsubscribe(`dwm/node/+/uplink/location`);
+async function getData() {
+    lanterns.subscribe(`dwm/node/${id}/uplink/location`);
+    if (liveTopic === `dwm/node/${id}/uplink/location`) {
+     setTimeout(() => {
+         lanterns.unsubscribe(`dwm/node/${id}/uplink/location`);
+     }, 100);
+     return { "position": livePosition, "topic": liveTopic, "id": id };
+    } 
+}
+
+exports.getLivePosition = async (req: any, res: any) => {
+  lanterns.unsubscribe(`dwm/node/+/uplink/location`);
+  id = req.params.id;
+  let data : any = await getData();
+  res.send(data);
+};
 
 exports.reboot = async (req: any, res: any) => {
 	console.log('reboot', req.body);
 	try {
-		client.publish(`/lanterns/${req.body.id}/reboot`, '{"reboot":{"state":1}}');
+		lanterns.publish(`/lanterns/${req.body.id}/reboot`, '{"reboot":{"state":1}}');
   } catch (err) { }
   	res.send(`Rebooted ${req.body.id}`);
 	setTimeout(() => {
-		client.publish(`/lanterns/${req.body.id}/reboot`, '{"reboot":{"state":0}}');
-
+		lanterns.publish(`/lanterns/${req.body.id}/reboot`, '{"reboot":{"state":0}}');
   }, 1000);
 };
 
 exports.flash = async (req: any, res: any) => {
 	console.log('flash', req.body);
 	try {
-		client.publish(`/lanterns/${req.body.id}/flash`,'{"flash":{"state":1}}');
+		lanterns.publish(`/lanterns/${req.body.id}/flash`,'{"flash":{"state":1}}');
   } catch (err) { }
 	res.send(`Flashed ${req.body.id} !`);
 	setTimeout(() => {
-		client.publish(`/lanterns/${req.body.id}/flash`,'{"flash":{"state":0}}');	
+		lanterns.publish(`/lanterns/${req.body.id}/flash`,'{"flash":{"state":0}}');	
 	}, 3000);
 	
 };
@@ -34,7 +59,7 @@ exports.resetAll = async (req: any, res: any) => {
 		allUser.forEach(async (element: any) => {
 			await Lantern.updateOne({id: element.id}, {pulse: '0', rgb: '0, 0, 0, 0'}, options);
 			const thisUser = await Lantern.findOne({id: element.id});
-			client.publish(`/lanterns/${thisUser.id}/reset`, JSON.stringify(thisUser));
+			lanterns.publish(`/lanterns/${thisUser.id}/reset`, JSON.stringify(thisUser));
 			console.log(thisUser);
 		});
 		res.send('All pulse are now set to 0');
@@ -52,8 +77,8 @@ exports.reset = async (req: any, res: any) => {
 		await Lantern.updateOne({id: id}, {pulse: '0', rgb: '0, 0, 0, 1'}, {useFindAndModify: false});
 		const user = await Lantern.findOne({id: id});
 		console.log(user);
-		client.publish(`/lantern/${user.id}/audio/extinguish`);
-		client.publish(`/lanterns/${user.id}/reset`, JSON.stringify(user));
+		lanterns.publish(`/lantern/${user.id}/audio/extinguish`);
+		lanterns.publish(`/lanterns/${user.id}/reset`, JSON.stringify(user));
 		res.send(`Lantern ${id} pulse is now 0!`);
 	} catch (error) {
 		console.log('error', error);
@@ -192,8 +217,8 @@ exports.update = async (req: any, res: any) => {
 	try {
 		await Lantern.updateOne({id: id}, req.body, {useFindAndModify: false});
     const lantern = await Lantern.findOne({ id: id });
-		client.publish(`/lantern/${lantern.id}/audio/ignite`, lantern.pulse.toString())
-    client.publish(`/lanterns/isactive`, JSON.stringify(lantern))
+		lanterns.publish(`/lantern/${lantern.id}/audio/ignite`, lantern.pulse.toString())
+    lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern))
 		res.send(`Lantern ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);
