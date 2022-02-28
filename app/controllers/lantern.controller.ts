@@ -1,55 +1,53 @@
 import {db} from '../models';
 import {getRandomColor} from '../utils';
 const Lantern = db.lanterns;
-import { lanterns } from '../utils/mqtt';
+import {lanterns} from '../utils/mqtt';
 
 let livePosition: any;
 let liveTopic: any;
-let id : any
+let id: any;
 
 lanterns.on('message', function (topic: String, message: String) {
-  livePosition = message.toString();
-  liveTopic = topic
+	livePosition = message.toString();
+	liveTopic = topic;
 });
- lanterns.unsubscribe(`dwm/node/+/uplink/location`);
+lanterns.unsubscribe(`dwm/node/+/uplink/location`);
 async function getData() {
-    lanterns.subscribe(`dwm/node/${id}/uplink/location`);
-    if (liveTopic === `dwm/node/${id}/uplink/location`) {
-     setTimeout(() => {
-         lanterns.unsubscribe(`dwm/node/${id}/uplink/location`);
-     }, 100);
-     return { "position": livePosition, "topic": liveTopic, "id": id };
-    } 
+	lanterns.subscribe(`dwm/node/${id}/uplink/location`);
+	if (liveTopic === `dwm/node/${id}/uplink/location`) {
+		setTimeout(() => {
+			lanterns.unsubscribe(`dwm/node/${id}/uplink/location`);
+		}, 100);
+		return {position: livePosition, topic: liveTopic, id: id};
+	}
 }
 
 exports.getLivePosition = async (req: any, res: any) => {
-  lanterns.unsubscribe(`dwm/node/+/uplink/location`);
-  id = req.params.id;
-  let data : any = await getData();
-  res.send(data);
+	lanterns.unsubscribe(`dwm/node/+/uplink/location`);
+	id = req.params.id;
+	let data: any = await getData();
+	res.send(data);
 };
 
 exports.reboot = async (req: any, res: any) => {
-	console.log('reboot', req.body);
 	try {
 		lanterns.publish(`/lanterns/${req.body.id}/reboot`, '{"reboot":{"state":1}}');
-  } catch (err) { }
-  	res.send(`Rebooted ${req.body.id}`);
+	} catch (err) {}
+	res.send(`Rebooted ${req.body.id}`);
 	setTimeout(() => {
 		lanterns.publish(`/lanterns/${req.body.id}/reboot`, '{"reboot":{"state":0}}');
-  }, 1000);
+	}, 1000);
 };
 
 exports.flash = async (req: any, res: any) => {
 	console.log('flash', req.body);
 	try {
-		lanterns.publish(`/lanterns/${req.body.id}/flash`,'{"flash":{"state":1}}');
-  } catch (err) { }
+		lanterns.publish(`/lanterns/${req.body.id}/flash`, '{"flash":{"state":1}}');
+	} catch (err) {}
 	res.send(`Flashed ${req.body.id} !`);
 	setTimeout(() => {
-		lanterns.publish(`/lanterns/${req.body.id}/flash`,'{"flash":{"state":0}}');	
+		lanterns.publish(`/lanterns/${req.body.id}/flash`, '{"flash":{"state":0}}');
 	}, 3000);
-	
 };
 
 exports.resetAll = async (req: any, res: any) => {
@@ -76,7 +74,6 @@ exports.reset = async (req: any, res: any) => {
 	try {
 		await Lantern.updateOne({id: id}, {pulse: '0', rgb: '0, 0, 0, 1'}, {useFindAndModify: false});
 		const user = await Lantern.findOne({id: id});
-		console.log(user);
 		lanterns.publish(`/lantern/${user.id}/audio/extinguish`);
 		lanterns.publish(`/lanterns/${user.id}/reset`, JSON.stringify(user));
 		res.send(`Lantern ${id} pulse is now 0!`);
@@ -89,9 +86,7 @@ exports.reset = async (req: any, res: any) => {
 };
 
 exports.randomUser = async (req: any, res: any) => {
-	console.log('req', req);
 	const color = await getRandomColor();
-	console.log('color', color);
 	try {
 		const filter = {pulse: 0, group: req.params.id};
 		const allAvailableUser = await Lantern.find(filter);
@@ -133,8 +128,8 @@ exports.create = async (req: any, res: any) => {
 			});
 
 			await lantern.save(lantern);
-			res.send(lantern);
 			console.log(`CREATED Lantern [ID: ${req.body.id} | IP: ${req.body.ipAddress}  | MAC: ${req.body.macAddress}]`);
+			res.send(lantern);
 		}
 	} catch (error) {
 		console.error(error);
@@ -148,8 +143,6 @@ exports.findActive = async (req: any, res: any) => {
 	var query = {status: true};
 	try {
 		const allActive = await Lantern.find(query);
-		console.log('ALL ACTIVE:');
-		console.log(allActive);
 		res.send(allActive);
 	} catch (error) {
 		console.error(error);
@@ -186,7 +179,6 @@ exports.findOne = async (req: any, res: any) => {
 
 // Update a User by the id in the request
 exports.updateStatus = async (req: any, res: any) => {
-	 console.log('req', req.body);
 	if (!req.body) {
 		return res.status(400).send({
 			message: 'Data to update can not be empty!'
@@ -207,7 +199,6 @@ exports.updateStatus = async (req: any, res: any) => {
 };
 
 exports.update = async (req: any, res: any) => {
-  console.log(req.body);
 	if (!req.body) {
 		return res.status(400).send({
 			message: 'Data to update can not be empty!'
@@ -216,9 +207,9 @@ exports.update = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
 		await Lantern.updateOne({id: id}, req.body, {useFindAndModify: false});
-    const lantern = await Lantern.findOne({ id: id });
-		lanterns.publish(`/lantern/${lantern.id}/audio/ignite`, lantern.pulse.toString())
-    lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern))
+		const lantern = await Lantern.findOne({id: id});
+		lanterns.publish(`/lantern/${lantern.id}/audio/ignite`, lantern.pulse.toString());
+		lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern));
 		res.send(`Lantern ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);

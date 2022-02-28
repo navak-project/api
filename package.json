@@ -16,10 +16,9 @@
   },
   "name": "api",
   "description": "api for the organic team in the navak project",
-  "version": "2.2.0",
+  "version": "2.5.0",
   "main": "index.js",
   "scripts": {
- 
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "nodemon -e ts -w ./ -x npm run watch:serve",
     "watch:serve": "ts-node index.ts",
