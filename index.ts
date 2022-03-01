@@ -4,7 +4,7 @@ const app = express();
 import cors from 'cors';
 import {connect} from 'mongoose';
 import { pingLanterns } from './app/utils';
-var mqtt = require('mqtt');
+import { version  } from './package.json';
 var cron = require('node-cron');
 import { connectMqtt  } from './app/utils/mqtt'
 
@@ -54,7 +54,7 @@ require('./app/routes/area.routes')(app);
 
 // default path
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send(`Navak API - ${version}`);
 });
 
 app.listen(PORT, async () => {
