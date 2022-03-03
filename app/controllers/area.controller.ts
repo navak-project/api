@@ -30,13 +30,17 @@ exports.create = async (req: any, res: any) => {
 			x: req.body.x,
 			y: req.body.y,
 			z: req.body.z,
-			size: req.body.size
+      size: req.body.size,
+      param1: req.body.param1,
+      param2: req.body.param2,
+      param3: req.body.param3,
 		});
 		const existing = await Area.findOne({id: req.body.id});
 		if (existing) {
-			return res.status(409).send({message: 'Email is already taken.'});
+			return res.status(409).send({message: 'Area is already taken.'});
 		} else {
-			await position.save(position);
+      await position.save(position);
+      areas.publish('/area', `area changed - ${req.body.id}`);
 			res.send(position);
 		}
 	} catch (error) {
@@ -73,7 +77,6 @@ exports.findOne = async (req: any, res: any) => {
 };
 
 exports.update = async (req: any, res: any) => {
-	console.log(req.body);
 	if (!req.body) {
 		return res.status(400).send({
 			message: 'Data to update can not be empty!'
@@ -84,7 +87,8 @@ exports.update = async (req: any, res: any) => {
 	try {
 		await Area.updateOne({id: id}, req.body, {
 			useFindAndModify: true
-		});
+    });
+    areas.publish('/area', `area changed - ${req.body.id}`);
 		res.send(`Area ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);
@@ -97,7 +101,8 @@ exports.update = async (req: any, res: any) => {
 exports.delete = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
-		await Area.findOneAndDelete({id: id});
+    await Area.findOneAndDelete({ id: id });
+    areas.publish('/area', `area changed - ${req.body.id}`);
 		res.send(`Area ${id} deleted successful!`);
 	} catch (error) {
 		console.log('error', error);

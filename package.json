@@ -16,7 +16,7 @@
   },
   "name": "api",
   "description": "api for the organic team in the navak project",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

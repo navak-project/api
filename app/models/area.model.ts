@@ -36,6 +36,21 @@ module.exports = (mongoose: any) => {
         required: true,
         default: '0.0'
       },
+      param1: {
+        type: Number,
+        required: false,
+        default: 0
+      },
+      param2: {
+        type: Number,
+        required: false,
+        default: 0
+      },
+      param3: {
+        type: String,
+        required: true,
+        default: '0'
+      },
 		
 		})
 	);
