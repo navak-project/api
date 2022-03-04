@@ -2,19 +2,6 @@ const colorsys = require('colorsys');
 import ping from 'ping';
 const db = require('../models').db;
 
-/*export async function mqttInit() {
-	var mqtt = require('mqtt')
-	const host = '192.168.1.212'
-	const port = '1883'
-	var client = mqtt.connect(`mqtt://${host}:${port}`)
-	client.port = port;
-	client.host = host;
-	client.on('connect', function () {
-		console.log(`🔗 Connected to MQTT: mqtt://${client.host}:${client.port}`)
-	})
-	return client;
-}*/
-
 /**
  * Get a random RGB color
  * @return {string} return random RGB color
@@ -26,8 +13,6 @@ export async function getRandomColor(): Promise<string> {
 	const hsvToRgb = await colorsys.hsvToRgb({h: h, s: s, v: v});
 	return `${hsvToRgb.r}, ${hsvToRgb.g}, ${hsvToRgb.b}, ${255}`;
 }
-
-
 
 // register ip to the database servers
 export async function register(): Promise<void> {
@@ -54,8 +39,8 @@ export async function register(): Promise<void> {
 export async function pingLanterns() {
 	var query = {status: true};
 	var pingcfg = {
-		timeout: 2,
-		extra: ['-i', '2']
+		timeout: 5,
+		extra: ['-i', '5']
 	};
 	try {
 		const allLanterns = await db.lanterns.find();
@@ -66,9 +51,6 @@ export async function pingLanterns() {
 					await db.lanterns.findOneAndUpdate({id:lantern.id}, {"status": status});
 					if (!status) {
 						await db.lanterns.updateOne({id: lantern.id}, {pulse: '0', rgb: '0, 0, 0, 0'}, {useFindAndModify: false});
-					//	console.log(`🔴 Lantern [ID: ${lantern.id} | IP: ${lantern.ipAddress} | MAC: ${lantern.macAddress}] is Offline!`);
-					} else {
-						//console.log(`🟢 Lantern [ID: ${lantern.id} | IP: ${lantern.ipAddress} | MAC: ${lantern.macAddress}] is Online!`);
 					}
 				},
 				pingcfg
