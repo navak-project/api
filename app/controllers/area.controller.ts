@@ -26,7 +26,8 @@ exports.create = async (req: any, res: any) => {
 	try {
 		const position = new Area({
 			id: req.body.id,
-			name: req.body.name,
+      name: req.body.name,
+      group: req.body.group,
 			x: req.body.x,
 			y: req.body.y,
 			z: req.body.z,
