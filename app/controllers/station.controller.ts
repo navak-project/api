@@ -2,6 +2,16 @@ import {db} from '../models';
 const Station = db.stations;
 import {stations} from '../utils/mqtt';
 
+/*exports.metrics = async (req: any, res: any) => {
+  const station = await Station.findOne({ id: req.params.id });
+  if (!station) {
+    return res.status(404).send({
+      message: 'Station not found with id ' + req.params.id
+    });
+  }
+  res.send(station.metrics);
+};*/
+
 exports.resetAll = async (req: any, res: any) => {
 	try {
 		const options = {

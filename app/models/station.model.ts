@@ -24,12 +24,16 @@ module.exports = (mongoose: any) => {
 				required: false,
 				default: '0,0,0,255'
 			},
-			metrics: 
-      {
-        type: {
-          message: {type: String, required: true, default:null },
-        },
-      }
+			metrics: {
+				type: {
+					message: {type: String, required: false, default: 'none'},
+					lantern: {type: String, required: false, default: 'none'},
+					bpm: {type: Number, required: false, default: 70},
+					state: {type: String, required: false, default: 0},
+					timer: {type: String, required: false, default: '00:00:00'},
+					presence: {type: String, required: false, default: false}
+				}
+			}
 		})
 	);
 	return Station;
