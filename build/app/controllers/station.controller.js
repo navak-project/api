@@ -56,14 +56,14 @@ exports.resetAll = function (req, res) { return __awaiter(void 0, void 0, void 0
                         switch (_a.label) {
                             case 0: return [4 /*yield*/, Station.updateOne({
                                     _id: element._id
-                                }, { "state": 0 }, options_1)];
+                                }, { state: 0 }, options_1)];
                             case 1:
                                 _a.sent();
                                 return [2 /*return*/];
                         }
                     });
                 }); });
-                res.send("All Pulse Sensors are now set to 0");
+                res.send('All Pulse Sensors are now set to 0');
                 return [3 /*break*/, 3];
             case 2:
                 error_1 = _a.sent();
@@ -86,7 +86,7 @@ exports.reset = function (req, res) { return __awaiter(void 0, void 0, void 0, f
             case 1:
                 _a.trys.push([1, 3, , 4]);
                 return [4 /*yield*/, Station.findByIdAndUpdate(id, {
-                        "state": 0
+                        state: 0
                     }, { useFindAndModify: false })];
             case 2:
                 _a.sent();
@@ -110,7 +110,7 @@ exports.create = function (req, res) { return __awaiter(void 0, void 0, void 0, 
             case 0:
                 if (!req.body) {
                     res.status(400).send({
-                        message: "Content can not be empty!"
+                        message: 'Content can not be empty!'
                     });
                     return [2 /*return*/];
                 }
@@ -120,7 +120,7 @@ exports.create = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 station = new Station({
                     id: req.body.id,
                     universe: req.body.universe,
-                    state: req.body.state,
+                    state: req.body.state
                 });
                 return [4 /*yield*/, station.save(station)];
             case 2:
@@ -144,7 +144,7 @@ exports.findAll = function (req, res) { return __awaiter(void 0, void 0, void 0,
         switch (_a.label) {
             case 0:
                 title = req.query.title;
-                condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
+                condition = title ? { title: { $regex: new RegExp(title), $options: 'i' } } : {};
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
@@ -188,34 +188,34 @@ exports.findOne = function (req, res) { return __awaiter(void 0, void 0, void 0,
     });
 }); };
 exports.update = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, puslesensor, error_6;
+    var val, id, puslesensor, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                console.log('🚀 ~ file: lantern.controller.ts ~ line 203 ~ exports.update= ~ req');
+                val = JSON.stringify(req.body);
                 if (!req.body) {
                     return [2 /*return*/, res.status(400).send({
-                            message: "Data to update can not be empty!"
+                            message: 'Data to update can not be empty!'
                         })];
                 }
                 id = req.params.id;
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, Station.updateOne({ id: id }, req.body, {
-                        useFindAndModify: true
+                return [4 /*yield*/, Station.findOneAndUpdate({ id: id }, {
+                        $set: req.body
                     })];
             case 2:
                 _a.sent();
                 return [4 /*yield*/, Station.findOne({ id: id })];
             case 3:
                 puslesensor = _a.sent();
-                console.log(puslesensor);
                 mqtt_1.stations.publish("/station/".concat(id, "/state"), JSON.stringify(puslesensor));
                 res.send("Station ".concat(id, " updated successful!"));
                 return [3 /*break*/, 5];
             case 4:
                 error_6 = _a.sent();
-                console.log('error', error_6);
                 res.status(500).send({
                     message: error_6
                 });

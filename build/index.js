@@ -45,7 +45,7 @@ var app = (0, express_1.default)();
 var cors_1 = __importDefault(require("cors"));
 var mongoose_1 = require("mongoose");
 var utils_1 = require("./app/utils");
-var mqtt = require('mqtt');
+var package_json_1 = require("./package.json");
 var cron = require('node-cron');
 var mqtt_1 = require("./app/utils/mqtt");
 var corsOptions = {
@@ -101,7 +101,7 @@ require('./app/routes/station.routes')(app);
 require('./app/routes/area.routes')(app);
 // default path
 app.get('/', function (req, res) {
-    res.send('Hello World!');
+    res.send("Navak API - ".concat(package_json_1.version));
 });
 app.listen(PORT, function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {

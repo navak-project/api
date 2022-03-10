@@ -1,4 +1,6 @@
 "use strict";
+require("dotenv/config");
+console.log("🚀 ~ file: db.config.ts ~ line 4 ~ process.env.MONGODB", process.env.MONGODB);
 module.exports = {
-    url: "mongodb://192.168.1.209:27017/navak"
+    url: "mongodb://".concat(process.env.MONGODB, ":27017/navak")
 };

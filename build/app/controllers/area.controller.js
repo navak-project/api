@@ -40,9 +40,9 @@ var models_1 = require("../models");
 var mqtt_1 = require("../utils/mqtt");
 var Area = models_1.db.areas;
 var toolPosition;
-mqtt_1.areas.subscribe('dwm/node/d491/uplink/location');
+mqtt_1.areas.subscribe('dwm/node/0bb6/uplink/location');
 mqtt_1.areas.on('message', function (topic, message) {
-    if (topic === 'dwm/node/d491/uplink/location') {
+    if (topic === 'dwm/node/0bb6/uplink/location') {
         toolPosition = message.toString();
     }
 });
@@ -70,19 +70,24 @@ exports.create = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 position = new Area({
                     id: req.body.id,
                     name: req.body.name,
+                    group: req.body.group,
                     x: req.body.x,
                     y: req.body.y,
                     z: req.body.z,
-                    size: req.body.size
+                    size: req.body.size,
+                    param1: req.body.param1,
+                    param2: req.body.param2,
+                    param3: req.body.param3,
                 });
                 return [4 /*yield*/, Area.findOne({ id: req.body.id })];
             case 2:
                 existing = _a.sent();
                 if (!existing) return [3 /*break*/, 3];
-                return [2 /*return*/, res.status(409).send({ message: 'Email is already taken.' })];
+                return [2 /*return*/, res.status(409).send({ message: 'Area is already taken.' })];
             case 3: return [4 /*yield*/, position.save(position)];
             case 4:
                 _a.sent();
+                mqtt_1.areas.publish('/area', "area changed - ".concat(req.body.id));
                 res.send(position);
                 _a.label = 5;
             case 5: return [3 /*break*/, 7];
@@ -151,7 +156,6 @@ exports.update = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(req.body);
                 if (!req.body) {
                     return [2 /*return*/, res.status(400).send({
                             message: 'Data to update can not be empty!'
@@ -167,6 +171,7 @@ exports.update = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                     })];
             case 2:
                 _a.sent();
+                mqtt_1.areas.publish('/area', "area changed - ".concat(req.body.id));
                 res.send("Area ".concat(id, " updated successful!"));
                 return [3 /*break*/, 4];
             case 3:
@@ -192,6 +197,7 @@ exports.delete = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, Area.findOneAndDelete({ id: id })];
             case 2:
                 _a.sent();
+                mqtt_1.areas.publish('/area', "area changed - ".concat(req.body.id));
                 res.send("Area ".concat(id, " deleted successful!"));
                 return [3 /*break*/, 4];
             case 3:

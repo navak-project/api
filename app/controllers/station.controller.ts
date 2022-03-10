@@ -104,6 +104,8 @@ exports.findOne = async (req: any, res: any) => {
 };
 
 exports.update = async (req: any, res: any) => {
+  console.log('🚀 ~ file: lantern.controller.ts ~ line 203 ~ exports.update= ~ req', req.body);
+  let val = JSON.stringify(req.body)
 	if (!req.body) {
 		return res.status(400).send({
 			message: 'Data to update can not be empty!'
@@ -111,9 +113,12 @@ exports.update = async (req: any, res: any) => {
 	}
 	const id = req.params.id;
 	try {
-		await Station.updateOne({id: id}, req.body, {
-			useFindAndModify: true
-		});
+		await Station.findOneAndUpdate(
+			{ id: id },
+			{
+				$set: req.body
+			},
+		);
 		const puslesensor = await Station.findOne({id: id});
 		stations.publish(`/station/${id}/state`, JSON.stringify(puslesensor));
 		res.send(`Station ${id} updated successful!`);

@@ -56,7 +56,7 @@ function getData() {
                 setTimeout(function () {
                     mqtt_1.lanterns.unsubscribe("dwm/node/".concat(id, "/uplink/location"));
                 }, 100);
-                return [2 /*return*/, { "position": livePosition, "topic": liveTopic, "id": id }];
+                return [2 /*return*/, { position: livePosition, topic: liveTopic, id: id }];
             }
             return [2 /*return*/];
         });
@@ -79,7 +79,6 @@ exports.getLivePosition = function (req, res) { return __awaiter(void 0, void 0,
 }); };
 exports.reboot = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        console.log('reboot', req.body);
         try {
             mqtt_1.lanterns.publish("/lanterns/".concat(req.body.id, "/reboot"), '{"reboot":{"state":1}}');
         }
@@ -159,7 +158,6 @@ exports.reset = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 return [4 /*yield*/, Lantern.findOne({ id: id })];
             case 3:
                 user = _a.sent();
-                console.log(user);
                 mqtt_1.lanterns.publish("/lantern/".concat(user.id, "/audio/extinguish"));
                 mqtt_1.lanterns.publish("/lanterns/".concat(user.id, "/reset"), JSON.stringify(user));
                 res.send("Lantern ".concat(id, " pulse is now 0!"));
@@ -179,16 +177,13 @@ exports.randomUser = function (req, res) { return __awaiter(void 0, void 0, void
     var color, filter, allAvailableUser, picked, options, updateDoc, user, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                console.log('req', req);
-                return [4 /*yield*/, (0, utils_1.getRandomColor)()];
+            case 0: return [4 /*yield*/, (0, utils_1.getRandomColor)()];
             case 1:
                 color = _a.sent();
-                console.log('color', color);
                 _a.label = 2;
             case 2:
                 _a.trys.push([2, 6, , 7]);
-                filter = { pulse: 0, group: req.params.id };
+                filter = { status: true, pulse: 0, group: req.params.id };
                 return [4 /*yield*/, Lantern.find(filter)];
             case 3:
                 allAvailableUser = _a.sent();
@@ -208,6 +203,7 @@ exports.randomUser = function (req, res) { return __awaiter(void 0, void 0, void
                 return [4 /*yield*/, Lantern.findById(picked._id)];
             case 5:
                 user = _a.sent();
+                console.log("🚀 ~ user", user.id);
                 res.send(user);
                 return [3 /*break*/, 7];
             case 6:
@@ -248,8 +244,8 @@ exports.create = function (req, res) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, lantern.save(lantern)];
             case 4:
                 _a.sent();
-                res.send(lantern);
                 console.log("CREATED Lantern [ID: ".concat(req.body.id, " | IP: ").concat(req.body.ipAddress, "  | MAC: ").concat(req.body.macAddress, "]"));
+                res.send(lantern);
                 _a.label = 5;
             case 5: return [3 /*break*/, 7];
             case 6:
@@ -275,8 +271,6 @@ exports.findActive = function (req, res) { return __awaiter(void 0, void 0, void
                 return [4 /*yield*/, Lantern.find(query)];
             case 2:
                 allActive = _a.sent();
-                console.log('ALL ACTIVE:');
-                console.log(allActive);
                 res.send(allActive);
                 return [3 /*break*/, 4];
             case 3:
@@ -345,7 +339,6 @@ exports.updateStatus = function (req, res) { return __awaiter(void 0, void 0, vo
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log('req', req.body);
                 if (!req.body) {
                     return [2 /*return*/, res.status(400).send({
                             message: 'Data to update can not be empty!'
@@ -378,7 +371,6 @@ exports.update = function (req, res) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                console.log(req.body);
                 if (!req.body) {
                     return [2 /*return*/, res.status(400).send({
                             message: 'Data to update can not be empty!'

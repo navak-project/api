@@ -43,18 +43,6 @@ exports.pingLanterns = exports.register = exports.getRandomColor = void 0;
 var colorsys = require('colorsys');
 var ping_1 = __importDefault(require("ping"));
 var db = require('../models').db;
-/*export async function mqttInit() {
-    var mqtt = require('mqtt')
-    const host = '192.168.1.212'
-    const port = '1883'
-    var client = mqtt.connect(`mqtt://${host}:${port}`)
-    client.port = port;
-    client.host = host;
-    client.on('connect', function () {
-        console.log(`🔗 Connected to MQTT: mqtt://${client.host}:${client.port}`)
-    })
-    return client;
-}*/
 /**
  * Get a random RGB color
  * @return {string} return random RGB color
@@ -125,8 +113,8 @@ function pingLanterns() {
                 case 0:
                     query = { status: true };
                     pingcfg = {
-                        timeout: 2,
-                        extra: ['-i', '2']
+                        timeout: 5,
+                        extra: ['-i', '5']
                     };
                     _a.label = 1;
                 case 1:
@@ -145,7 +133,7 @@ function pingLanterns() {
                                         return [4 /*yield*/, db.lanterns.updateOne({ id: lantern.id }, { pulse: '0', rgb: '0, 0, 0, 0' }, { useFindAndModify: false })];
                                     case 2:
                                         _a.sent();
-                                        return [3 /*break*/, 3];
+                                        _a.label = 3;
                                     case 3: return [2 /*return*/];
                                 }
                             });
