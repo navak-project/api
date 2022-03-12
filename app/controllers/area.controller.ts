@@ -4,9 +4,9 @@ const Area = db.areas;
 
 let toolPosition: any;
 
-areas.subscribe('dwm/node/d491/uplink/location');
+areas.subscribe('dwm/node/0bb6/uplink/location');
 areas.on('message', function (topic: String, message: String) {
-	if (topic === 'dwm/node/d491/uplink/location') {
+	if (topic === 'dwm/node/0bb6/uplink/location') {
 		toolPosition = message.toString();
 	}
 });
