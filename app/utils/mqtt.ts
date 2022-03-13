@@ -6,7 +6,7 @@ let areas: any;
 let stations: any;
 
 export function connectMqtt() {
-	const host = '192.168.1.212';
+	const host = 'broker.emqx.io';
 	const port = '1883';
 	client = mqtt.connect(`mqtt://${host}:${port}`);
 	lanterns = mqtt.connect(`mqtt://${host}:${port}`);

@@ -60,3 +60,25 @@ export async function pingLanterns() {
 		console.error(error);
 	}
 }
+
+export async function pingStations() {
+	var pingcfg = {
+		timeout: 5,
+		extra: ['-i', '5']
+	};
+	try {
+		const allStations = await db.stations.find();
+		allStations.forEach((station: any) => {
+			ping.sys.probe(
+				station['ip'],
+				async (status: any) => {
+          console.log("🚀 ~ file: index.ts ~ line 75 ~ status", status);
+					await db.stations.findOneAndUpdate({id:'s001'}, {"status": status});
+				},
+				pingcfg
+			);
+		});
+	} catch (error) {
+		console.error(error);
+	}
+}

@@ -25,7 +25,7 @@ module.exports = (mongoose: any) => {
       },
       message: {
         type: String,
-        default: '',
+        default: '-',
       },
       state: {
         type: Number,
@@ -33,7 +33,7 @@ module.exports = (mongoose: any) => {
       },
       lantern: {
         type: String,
-        default: '',
+        default: '-',
       },
       timer: {
         type: String,
