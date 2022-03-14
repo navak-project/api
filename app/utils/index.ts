@@ -1,7 +1,7 @@
 const colorsys = require('colorsys');
 import ping from 'ping';
 const db = require('../models').db;
-
+var tcpp = require('tcp-ping');
 /**
  * Get a random RGB color
  * @return {string} return random RGB color
@@ -62,21 +62,12 @@ export async function pingLanterns() {
 }
 
 export async function pingStations() {
-	var pingcfg = {
-		timeout: 5,
-		extra: ['-i', '5']
-	};
 	try {
 		const allStations = await db.stations.find();
-		allStations.forEach((station: any) => {
-			ping.sys.probe(
-				station['ip'],
-				async (status: any) => {
-          console.log("🚀 ~ file: index.ts ~ line 75 ~ status", status);
-					await db.stations.findOneAndUpdate({id:'s001'}, {"status": status});
-				},
-				pingcfg
-			);
+    allStations.forEach((station: any) => {
+      tcpp.probe(station.ip, 5000, async function(err:any, available:any) {
+       	await db.stations.findOneAndUpdate({id:station.id}, {status : available});
+      });
 		});
 	} catch (error) {
 		console.error(error);

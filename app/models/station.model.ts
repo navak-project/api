@@ -31,6 +31,10 @@ module.exports = (mongoose: any) => {
         type: Number,
         default: 0,
       },
+      status: {
+        type: Boolean,
+        default: false,
+      },
       lantern: {
         type: String,
         default: '-',

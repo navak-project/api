@@ -104,8 +104,6 @@ exports.findOne = async (req: any, res: any) => {
 };
 
 exports.update = async (req: any, res: any) => {
-  console.log('🚀 ~ file: lantern.controller.ts ~ line 203 ~ exports.update= ~ req', req.body);
-  let val = JSON.stringify(req.body)
 	if (!req.body) {
 		return res.status(400).send({
 			message: 'Data to update can not be empty!'
