@@ -15,7 +15,7 @@ import {stations} from '../utils/mqtt';
 exports.reboot = async (req: any, res: any) => {
   const id = req.params.id;
 	try {
-    await stations.publish(`/station/reboot/${id}`, 'reboot');
+    await stations.publish(`/station/${id}/reboot`, 'reboot');
     	res.send(`Station ${id} rebooted successful!`);
 	} catch (error) {
 		console.log('error', error);
