@@ -12,6 +12,19 @@ import {stations} from '../utils/mqtt';
   res.send(station.metrics);
 };*/
 
+exports.reboot = async (req: any, res: any) => {
+  const id = req.params.id;
+	try {
+    await stations.publish(`/station/reboot/${id}`, 'reboot');
+    	res.send(`Station ${id} rebooted successful!`);
+	} catch (error) {
+		console.log('error', error);
+		res.status(500).send({
+			message: error
+		});
+	}
+};
+
 exports.resetAll = async (req: any, res: any) => {
 	try {
 		const options = {

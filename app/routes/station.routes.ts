@@ -6,6 +6,8 @@ module.exports = (app : any) => {
   // Reset all pulse to 0
   router.post("/reset/", stations.resetAll);
 
+  router.post("/reboot/:id", stations.reboot);
+
   // Reset one pulse to 0
   router.put("/reset/:id", stations.reset);
 
