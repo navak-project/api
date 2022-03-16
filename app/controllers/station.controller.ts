@@ -2,6 +2,29 @@ import {db} from '../models';
 const Station = db.stations;
 import {stations} from '../utils/mqtt';
 
+/*exports.metrics = async (req: any, res: any) => {
+  const station = await Station.findOne({ id: req.params.id });
+  if (!station) {
+    return res.status(404).send({
+      message: 'Station not found with id ' + req.params.id
+    });
+  }
+  res.send(station.metrics);
+};*/
+
+exports.reboot = async (req: any, res: any) => {
+  const id = req.params.id;
+	try {
+    await stations.publish(`/station/${id}/reboot`, 'reboot');
+    	res.send(`Station ${id} rebooted successful!`);
+	} catch (error) {
+		console.log('error', error);
+		res.status(500).send({
+			message: error
+		});
+	}
+};
+
 exports.resetAll = async (req: any, res: any) => {
 	try {
 		const options = {
@@ -101,9 +124,12 @@ exports.update = async (req: any, res: any) => {
 	}
 	const id = req.params.id;
 	try {
-		await Station.updateOne({id: id}, req.body, {
-			useFindAndModify: true
-		});
+		await Station.findOneAndUpdate(
+			{ id: id },
+			{
+				$set: req.body
+			},
+		);
 		const puslesensor = await Station.findOne({id: id});
 		stations.publish(`/station/${id}/state`, JSON.stringify(puslesensor));
 		res.send(`Station ${id} updated successful!`);
