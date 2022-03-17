@@ -37,24 +37,24 @@ export async function register(): Promise<void> {
  * Ping lantern to check status
  */
 export async function pingLanterns() {
-	var query = {status: true};
-	var pingcfg = {
-		timeout: 5,
-		extra: ['-i', '5']
-	};
 	try {
 		const allLanterns = await db.lanterns.find();
-		allLanterns.forEach((lantern: any) => {
-			ping.sys.probe(
-				lantern['ipAddress'],
-				async (status: any) => {
-					await db.lanterns.findOneAndUpdate({id:lantern.id}, {"status": status});
-					if (!status) {
-						await db.lanterns.updateOne({id: lantern.id}, {pulse: '0', rgb: '0, 0, 0, 0'}, {useFindAndModify: false});
-					}
-				},
-				pingcfg
-			);
+		allLanterns.forEach(async (lantern: any) => {
+      let res = await ping.promise.probe(lantern.ipAddress);
+      await db.lanterns.findOneAndUpdate({id:lantern.id}, {"status": res.alive});
+		});
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+
+export async function pingServers() {
+	try {
+    const allServers = await db.servers.find();
+		allServers.forEach(async (server: any) => {
+      let res = await ping.promise.probe(server.ipAddress);
+      await db.lanterns.findOneAndUpdate({id:server.id}, {"status": res.alive});
 		});
 	} catch (error) {
 		console.error(error);

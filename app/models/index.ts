@@ -10,5 +10,6 @@ db.url = dbConfig.url;
 db.lanterns = require("./lantern.model")(mongoose);
 db.stations = require("./station.model")(mongoose);
 db.areas = require("./area.model")(mongoose);
+db.servers = require("./server.model")(mongoose);
 
 export { db };
