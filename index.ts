@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-  if (process.env.ENV === 'prod') {
+  if (process.env.MACHINE === 'prod') {
     console.log('Ping!')
     await pingLanterns();
     await pingStations();
