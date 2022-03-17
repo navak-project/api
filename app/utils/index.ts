@@ -41,7 +41,10 @@ export async function pingLanterns() {
 		const allLanterns = await db.lanterns.find();
 		allLanterns.forEach(async (lantern: any) => {
       let res = await ping.promise.probe(lantern.ipAddress);
-      await db.lanterns.findOneAndUpdate({id:lantern.id}, {"status": res.alive});
+      await db.lanterns.findOneAndUpdate({ id: lantern.id }, { status: res.alive });
+      if (res.alive == false) {
+        await db.lanterns.findOneAndUpdate({ id: lantern.id }, { pulse: 0, rgb: '0,0,0,255' });
+      }
 		});
 	} catch (error) {
 		console.error(error);

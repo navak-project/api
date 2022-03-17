@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-  if (process.env.MACHINE === 'prod') {
+  //if (process.env.MACHINE === 'prod') {
     console.log('Ping!')
     await pingLanterns();
     await pingStations();
@@ -68,6 +68,6 @@ app.listen(PORT, async () => {
         await pingStations();
         await pingServers();
       });
-  }
+ // }
   console.log(`💻 Server is running: ${require('ip').address()}:${process.env.PORT}`);
 });
