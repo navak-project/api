@@ -58,13 +58,16 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-  await pingLanterns();
-  await pingStations();
-  await pingServers();
-  console.log(`💻 Server is running: ${require('ip').address()}:${process.env.PORT}`);
-  cron.schedule('*/30 * * * * *', async function () {
+  if (process.env.ENV === 'prod') {
+    console.log('Ping!')
     await pingLanterns();
     await pingStations();
     await pingServers();
-  });
+      cron.schedule('*/30 * * * * *', async function () {
+        await pingLanterns();
+        await pingStations();
+        await pingServers();
+      });
+  }
+  console.log(`💻 Server is running: ${require('ip').address()}:${process.env.PORT}`);
 });
