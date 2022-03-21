@@ -88,7 +88,7 @@ exports.reset = async (req: any, res: any) => {
 exports.randomUser = async (req: any, res: any) => {
 	const color = await getRandomColor();
 	try {
-		const filter = {status:false, pulse: 0, group: req.params.id};
+		const filter = {status:true, pulse: 0, group: req.params.id};
 		const allAvailableUser = await Lantern.find(filter);
 		if (allAvailableUser.length <= 0) {
 			return res.status(400).send({
