@@ -3,9 +3,7 @@ import express from 'express';
 const app = express();
 import cors from 'cors';
 import {connect} from 'mongoose';
-import { pingLanterns , pingStations, pingServers } from './app/utils';
 import { version  } from './package.json';
-var cron = require('node-cron');
 import { connectMqtt  } from './app/utils/mqtt'
 
 var corsOptions = {
@@ -58,16 +56,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-  //if (process.env.MACHINE === 'prod') {
-    console.log('Ping!')
-    await pingLanterns();
-    await pingStations();
-    await pingServers();
-      cron.schedule('*/30 * * * * *', async function () {
-        await pingLanterns();
-        await pingStations();
-        await pingServers();
-      });
- // }
   console.log(`💻 Server is running: ${require('ip').address()}:${process.env.PORT}`);
 });

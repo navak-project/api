@@ -6,7 +6,7 @@ module.exports = (mongoose: any) => {
         type: String,
         required: true
       },
-      ip: {
+      ipAddress: {
         type: String,
         required: true
       },
