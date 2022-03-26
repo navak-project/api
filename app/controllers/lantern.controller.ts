@@ -123,7 +123,7 @@ exports.create = async (req: any, res: any) => {
 			const lantern = new Lantern({
 				hostName: req.body.hostName,
 				macAddress: req.body.macAddress,
-				ipAddress: req.body.ipAddress
+        ipAddress: req.body.ipAddress,
 			});
 
 			await lantern.save(lantern);

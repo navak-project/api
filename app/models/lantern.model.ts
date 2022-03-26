@@ -56,6 +56,7 @@ module.exports = (mongoose: any) => {
       },
       picked: {
         type: Boolean,
+        required: true,
         default: false,
       },
     })
