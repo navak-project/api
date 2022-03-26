@@ -123,15 +123,22 @@ exports.update = async (req: any, res: any) => {
 		});
 	}
 	const id = req.params.id;
-	try {
-		await Station.findOneAndUpdate(
-			{ id: id },
-			{
-				$set: req.body
-			},
-		);
-		const puslesensor = await Station.findOne({id: id});
-		stations.publish(`/station/${id}/state`, JSON.stringify(puslesensor));
+  try {
+    await Station.findOneAndUpdate(
+      { id: id },
+      {
+        $set: req.body
+      },
+    );
+    const puslesensor = await Station.findOne({ id: id });
+    stations.publish(`/station/${id}/state`, JSON.stringify(puslesensor)); 
+    console.log("🚀 ~ file: station.controller.ts ~ line 136 ~ exports.update= ~ req.body.presence", req.body.presence);
+
+    if (req.body.presence) {
+      stations.publish(`/station/${id}/presence`, '{"presence": "true"}');
+    } else if (!req.body.presence) {
+       stations.publish(`/station/${id}/presence`, '{"presence": "false"}');
+    }
 		res.send(`Station ${id} updated successful!`);
 	} catch (error) {
 		res.status(500).send({
