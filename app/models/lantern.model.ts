@@ -54,6 +54,10 @@ module.exports = (mongoose: any) => {
         required: false,
         default: 0
       },
+      picked: {
+        type: Boolean,
+        default: false,
+      },
     })
   );
   return Lantern;

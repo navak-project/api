@@ -88,7 +88,7 @@ exports.reset = async (req: any, res: any) => {
 exports.randomUser = async (req: any, res: any) => {
 	const color = await getRandomColor();
 	try {
-		const filter = {status:true, pulse: 0, group: req.params.id};
+		const filter = {picked: false, status:true, pulse: 0, group: req.params.id};
 		const allAvailableUser = await Lantern.find(filter);
 		if (allAvailableUser.length <= 0) {
 			return res.status(400).send('No lantern available!');
@@ -96,7 +96,7 @@ exports.randomUser = async (req: any, res: any) => {
 		let picked = allAvailableUser[Math.floor(Math.random() * allAvailableUser.length)];
 		const options = {upsert: true};
 		const updateDoc = {
-			$set: {rgb: color}
+			$set: {rgb: color, picked: true}
 		};
 		await Lantern.updateOne({_id: picked._id}, updateDoc, options);
 		const user = await Lantern.findById(picked._id);
