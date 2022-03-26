@@ -11,6 +11,8 @@ module.exports = (app : any) => {
   // Reset one pulse to 0
   router.put("/reset/:id", stations.reset);
 
+  router.put("/presence/:id", stations.presence);
+
   // Create a new User
   router.post("/", stations.create);
 

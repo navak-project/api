@@ -116,6 +116,25 @@ exports.findOne = async (req: any, res: any) => {
 	}
 };
 
+exports.presence = async (req: any, res: any) => {
+	const id = req.params.id;
+  console.log("🚀 ~ file: station.controller.ts ~ line 121 ~ exports.presence= ~ id", id);
+  try {
+    await Station.findOneAndUpdate(
+      { id: id },
+      {
+        $set: req.body
+      },
+    );
+		stations.publish(`/station/${id}/presence`, `{"presence": "${req.body.presence}"}`);
+		res.send(`Station ${id} presence updated successful!`);
+	} catch (error) {
+		res.status(500).send({
+			message: error
+		});
+	}
+};
+
 exports.update = async (req: any, res: any) => {
 	if (!req.body) {
 		return res.status(400).send({
@@ -132,12 +151,6 @@ exports.update = async (req: any, res: any) => {
     );
     const puslesensor = await Station.findOne({ id: id });
     stations.publish(`/station/${id}/state`, JSON.stringify(puslesensor)); 
-    if (req.body.presence) {
-    stations.publish(`/station/${id}/presence`, `{"presence": "${req.body.presence}"}`);
-    }
-    if (!req.body.presence) {
-    stations.publish(`/station/${id}/presence`, `{"presence": "${req.body.presence}"}`);
-    }
 		res.send(`Station ${id} updated successful!`);
 	} catch (error) {
 		res.status(500).send({
