@@ -135,6 +135,9 @@ exports.update = async (req: any, res: any) => {
     if (req.body.presence) {
     stations.publish(`/station/${id}/presence`, `{"presence": "${req.body.presence}"}`);
     }
+    if (!req.body.presence) {
+    stations.publish(`/station/${id}/presence`, `{"presence": "${req.body.presence}"}`);
+    }
 		res.send(`Station ${id} updated successful!`);
 	} catch (error) {
 		res.status(500).send({
