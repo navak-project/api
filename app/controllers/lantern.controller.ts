@@ -1,6 +1,7 @@
 import {db} from '../models';
 import {getRandomColor} from '../utils';
 const Lantern = db.lanterns;
+const Station = db.stations;
 import {lanterns} from '../utils/mqtt';
 
 let livePosition: any;
@@ -207,7 +208,8 @@ exports.update = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
 		await Lantern.updateOne({id: id}, req.body, {useFindAndModify: false});
-		const lantern = await Lantern.findOne({id: id});
+    const lantern = await Lantern.findOne({ id: id });
+    await Station.updateOne({lantern: lantern.id},  {$set: {rgb: lantern.rgb}}, {useFindAndModify: false});
 		lanterns.publish(`/lantern/${lantern.id}/audio/ignite`, lantern.pulse.toString());
     lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern));
     lanterns.publish('/lanterns/update', JSON.stringify(req.body.id));
