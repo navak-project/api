@@ -127,7 +127,7 @@ exports.create = async (req: any, res: any) => {
 			});
 
       await lantern.save(lantern);
-      lanterns.publish('/lanterns/update', `lantern created - ${req.body.id}`);
+      lanterns.publish('/lanterns/update', JSON.stringify(req.body.id));
 			console.log(`CREATED Lantern [ID: ${req.body.id} | IP: ${req.body.ipAddress}  | MAC: ${req.body.macAddress}]`);
 			res.send(lantern);
 		}
@@ -210,7 +210,7 @@ exports.update = async (req: any, res: any) => {
 		const lantern = await Lantern.findOne({id: id});
 		lanterns.publish(`/lantern/${lantern.id}/audio/ignite`, lantern.pulse.toString());
     lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern));
-    lanterns.publish('/lanterns/update', `lantern updated - ${req.body.id}`);
+    lanterns.publish('/lanterns/update', JSON.stringify(req.body.id));
 		res.send(`Lantern ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);
