@@ -126,7 +126,8 @@ exports.create = async (req: any, res: any) => {
         ipAddress: req.body.ipAddress,
 			});
 
-			await lantern.save(lantern);
+      await lantern.save(lantern);
+      lanterns.publish('/lanterns/update', `lantern created - ${req.body.id}`);
 			console.log(`CREATED Lantern [ID: ${req.body.id} | IP: ${req.body.ipAddress}  | MAC: ${req.body.macAddress}]`);
 			res.send(lantern);
 		}
@@ -208,7 +209,8 @@ exports.update = async (req: any, res: any) => {
 		await Lantern.updateOne({id: id}, req.body, {useFindAndModify: false});
 		const lantern = await Lantern.findOne({id: id});
 		lanterns.publish(`/lantern/${lantern.id}/audio/ignite`, lantern.pulse.toString());
-		lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern));
+    lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern));
+    lanterns.publish('/lanterns/update', `lantern updated - ${req.body.id}`);
 		res.send(`Lantern ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);
