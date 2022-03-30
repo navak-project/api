@@ -101,7 +101,6 @@ exports.randomUser = async (req: any, res: any) => {
 		};
 		await Lantern.updateOne({_id: picked._id}, updateDoc, options);
 		const user = await Lantern.findById(picked._id);
-    console.log("🚀 ~ user", user.id);
 		res.send(user);
 	} catch (error) {
 		res.status(500).send({
