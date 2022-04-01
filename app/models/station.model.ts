@@ -31,6 +31,10 @@ module.exports = (mongoose: any) => {
         type: Number,
         default: 0,
       },
+      stateName: {
+        type: String,
+        default: '-',
+      },
       status: {
         type: Boolean,
         default: false,
