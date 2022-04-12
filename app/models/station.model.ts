@@ -41,7 +41,7 @@ module.exports = (mongoose: any) => {
       },
       lantern: {
         type: String,
-        default: '-',
+        default: null,
       },
       timer: {
         type: String,

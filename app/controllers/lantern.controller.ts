@@ -57,7 +57,7 @@ exports.resetAll = async (req: any, res: any) => {
 		const options = {upsert: false};
 		const allUser = await Lantern.find();
 		allUser.forEach(async (element: any) => {
-      await Lantern.updateOne({ id: element.id }, { pulse: '0', rgb: '0,0,0,1', picked: false}, options);
+			await Lantern.updateOne({id: element.id}, {pulse: '0', rgb: '0,0,0,1', picked: false}, options);
 			const thisUser = await Lantern.findOne({id: element.id});
 			lanterns.publish(`/lanterns/${thisUser.id}/reset`, JSON.stringify(thisUser));
 			console.log(thisUser);
@@ -89,7 +89,7 @@ exports.reset = async (req: any, res: any) => {
 exports.randomUser = async (req: any, res: any) => {
 	const color = await getRandomColor();
 	try {
-		const filter = {status:true, group: req.params.id, picked: false};
+		const filter = {status: true, group: req.params.id, picked: false};
 		const allAvailableUser = await Lantern.find(filter);
 		if (allAvailableUser.length <= 0) {
 			return res.status(400).send('No lantern available!');
@@ -118,16 +118,16 @@ exports.create = async (req: any, res: any) => {
 		const element = await Lantern.findOne({macAddress: req.body.macAddress});
 		if (element != null) {
 			console.log(`Lantern [ID: ${element.id} | IP: ${req.body.ipAddress} | MAC: ${req.body.macAddress}] already exists`);
+			await Lantern.updateOne({macAddress: req.body.macAddress}, {$set: {ipAddress: element.ipAddress}}, {useFindAndModify: false});
 			res.send(element);
 		} else {
 			const lantern = new Lantern({
 				hostName: req.body.hostName,
 				macAddress: req.body.macAddress,
-        ipAddress: req.body.ipAddress,
+				ipAddress: req.body.ipAddress
 			});
-
-      await lantern.save(lantern);
-      lanterns.publish('/lanterns/update', JSON.stringify(req.body.id));
+			await lantern.save(lantern);
+			lanterns.publish('/lanterns/update', JSON.stringify(req.body.id));
 			console.log(`CREATED Lantern [ID: ${req.body.id} | IP: ${req.body.ipAddress}  | MAC: ${req.body.macAddress}]`);
 			res.send(lantern);
 		}
@@ -188,7 +188,7 @@ exports.updateStatus = async (req: any, res: any) => {
 		var query = {macAddress: req.body.macAddress};
 		var newValues = {status: true};
 		const target = await Lantern.findOneAndUpdate(query, newValues);
-    console.log(`Lantern [ID: ${target.id} | IP: ${target.ipAddress} | MAC: ${target.macAddress}] is Online!`);
+		console.log(`Lantern [ID: ${target.id} | IP: ${target.ipAddress} | MAC: ${target.macAddress}] is Online!`);
 		res.send(`Lantern ${target['ipAddress']} is Online!`);
 	} catch (error) {
 		console.log('error', error);
@@ -207,11 +207,11 @@ exports.update = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
 		await Lantern.updateOne({id: id}, req.body, {useFindAndModify: false});
-    const lantern = await Lantern.findOne({ id: id });
-    await Station.updateOne({lantern: lantern.id},  {$set: {rgb: lantern.rgb}}, {useFindAndModify: false});
-	
-    lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern));
-    lanterns.publish('/lanterns/update', JSON.stringify(req.body.id));
+		const lantern = await Lantern.findOne({id: id});
+		await Station.updateOne({lantern: lantern.id}, {$set: {rgb: lantern.rgb}}, {useFindAndModify: false});
+
+		lanterns.publish(`/lanterns/isactive`, JSON.stringify(lantern));
+		lanterns.publish('/lanterns/update', JSON.stringify(req.body.id));
 		res.send(`Lantern ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);

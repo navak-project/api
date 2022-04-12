@@ -4,6 +4,8 @@ const Area = db.areas;
 
 let toolPosition: any;
 
+// add a new tag
+
 areas.subscribe('dwm/node/0bb6/uplink/location');
 areas.on('message', function (topic: String, message: String) {
 	if (topic === 'dwm/node/0bb6/uplink/location') {
