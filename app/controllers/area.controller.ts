@@ -32,7 +32,7 @@ exports.create = async (req: any, res: any) => {
       group: req.body.group,
 			x: req.body.x,
 			y: req.body.y,
-			z: req.body.z,
+			z: 0,
       size: req.body.size,
       param1: req.body.param1,
       param2: req.body.param2,
