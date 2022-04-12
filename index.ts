@@ -7,7 +7,8 @@ import { version  } from './package.json';
 import { connectMqtt  } from './app/utils/mqtt'
 
 var corsOptions = {
-	origin: 'http://localhost:8081'
+  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH'],
+	origin: '*'
 };
 
 app.use(cors(corsOptions));
