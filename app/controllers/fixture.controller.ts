@@ -1,4 +1,5 @@
-import {db} from '../models';
+import { db } from '../models';
+import {fixtures} from '../utils/mqtt';
 const Fixture = db.fixtures;
 
 exports.create = async (req: any, res: any) => {
@@ -17,6 +18,7 @@ exports.create = async (req: any, res: any) => {
 			return res.status(409).send({message: 'Fixture is already taken.'});
 		} else {
       await fixture.save(fixture);
+      fixtures.publish('/fixture', `area changed - ${req.body.id}`);
 			res.send(fixture);
 		}
 	} catch (error) {
@@ -64,7 +66,8 @@ exports.update = async (req: any, res: any) => {
 		await Fixture.updateOne({id: id}, req.body, {
 			useFindAndModify: true
     });
-		res.send(`Fixture ${id} updated successful!`);
+    fixtures.publish('/fixture', `area changed - ${req.body.id}`);
+    res.send(`Fixture ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);
 		res.status(500).send({
