@@ -11,5 +11,6 @@ db.lanterns = require("./lantern.model")(mongoose);
 db.stations = require("./station.model")(mongoose);
 db.areas = require("./area.model")(mongoose);
 db.servers = require("./server.model")(mongoose);
+db.fixtures = require("./fixture.model")(mongoose);
 
 export { db };
