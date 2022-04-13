@@ -9,20 +9,15 @@ exports.create = async (req: any, res: any) => {
 		return;
 	}
 	try {
-		const position = new Fixture({
+		const fixture = new Fixture({
 			id: req.body.id,
-      name: req.body.name,
-      universe: req.body.universe,
-			address: req.body.address,
-			area: req.body.area,
-      fixtureType: req.body.fixtureType,
 		});
 		const existing = await Fixture.findOne({id: req.body.id});
 		if (existing) {
 			return res.status(409).send({message: 'Fixture is already taken.'});
 		} else {
-      await position.save(position);
-			res.send(position);
+      await fixture.save(fixture);
+			res.send(fixture);
 		}
 	} catch (error) {
 		console.error(error);
