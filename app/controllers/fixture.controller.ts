@@ -18,7 +18,7 @@ exports.create = async (req: any, res: any) => {
       area: req.body.area,
       fixtureType: req.body.fixtureType
 		});
-		const existing = await Fixture.findOne({id: req.body.id, name: req.body.name});
+		const existing = await Fixture.find({id: req.body.id});
     console.log("🚀 ~ file: fixture.controller.ts ~ line 17 ~ exports.create= ~ existing", existing);
 		if (existing) {
 			return res.status(409).send({message: 'Fixture is already taken.'});

@@ -116,15 +116,15 @@ exports.create = async (req: any, res: any) => {
 	}
 	try {
 		const element = await Lantern.findOne({macAddress: req.body.macAddress});
-		if (element != null) {
+		if (element) {
 			console.log(`Lantern [ID: ${element.id} | IP: ${req.body.ipAddress} | MAC: ${req.body.macAddress}] already exists`);
-			await Lantern.updateOne({macAddress: req.body.macAddress}, {$set: {ipAddress: element.ipAddress}}, {useFindAndModify: false});
-			res.send(element);
+      //await Lantern.updateOne({ macAddress: req.body.macAddress }, { $set: { ipAddress: element.ipAddress } }, { useFindAndModify: false });
+      return res.status(409).send({message: 'Lantern is already taken.'});
 		} else {
 			const lantern = new Lantern({
 				hostName: req.body.hostName,
 				macAddress: req.body.macAddress,
-				ipAddress: req.body.ipAddress
+        ipAddress: req.body.ipAddressà
 			});
 			await lantern.save(lantern);
 			lanterns.publish('/lanterns/update', JSON.stringify(req.body.id));
