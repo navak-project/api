@@ -75,7 +75,8 @@ exports.reset = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
 		await Lantern.updateOne({id: id}, {pulse: '0', rgb: '0,0,0,1', picked: false}, {useFindAndModify: false});
-		const user = await Lantern.findOne({id: id});
+    const user = await Lantern.findOne({ id: id });
+    /// also reset stations if lanterns resets
 		lanterns.publish(`/lanterns/${user.id}/reset`, JSON.stringify(user));
 		res.send(`Lantern ${id} pulse is now 0!`);
 	} catch (error) {
