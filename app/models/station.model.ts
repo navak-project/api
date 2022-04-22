@@ -51,9 +51,13 @@ module.exports = (mongoose: any) => {
         type: Boolean,
         default: false,
       },
-      metrics: {
-        type: {
-        },
+      polarStatus: {
+        type: String,
+        default: '',
+      },
+      polarState: {
+        type: Number,
+        default: 0,
       }
     })
   );

@@ -79,7 +79,8 @@ exports.create = async (req: any, res: any) => {
 		const station = new Station({
 			id: req.body.id,
 			universe: req.body.universe,
-			state: req.body.state
+      state: req.body.state,
+      polarStatus: req.body.polarStatus,
 		});
 		await station.save(station);
 		res.send(station);

@@ -2,20 +2,31 @@ import {db} from '../models';
 import {areas} from '../utils/mqtt';
 const Area = db.areas;
 
-let toolPosition: any;
+let tagList: any = [{id: '0bb6', position: null}, {id: 'd4b2', position: null}];
 
-// add a new tag
+tagList.forEach((element:any)=> {
+  areas.subscribe(`dwm/node/${element.id}/uplink/location`);
+});
 
-areas.subscribe('dwm/node/0bb6/uplink/location');
 areas.on('message', function (topic: String, message: String) {
-	if (topic === 'dwm/node/0bb6/uplink/location') {
-		toolPosition = message.toString();
-	}
+  tagList.forEach((element: any) => {
+    if (topic === `dwm/node/${element.id}/uplink/location`) {
+      element.position = message.toString();
+    }
+  });
 });
 
 exports.getToolPosition = async (req: any, res: any) => {
-	//console.log("🚀 ~ file: position.controller.ts ~ line 14 ~ exports.getPosition= ~ currentPosition", toolPosition);
-	res.send(toolPosition);
+  let id = req.params.id;
+  let element = tagList.find((element: any) => {
+    return element.id === id;
+  });
+  if (element.position !== null) {
+    res.send(element.position);
+    return
+  }
+  
+  res.send('Position null');
 };
 
 exports.create = async (req: any, res: any) => {

@@ -10,7 +10,7 @@ module.exports = (app : any) => {
   router.get("/", areas.findAll);
 
   // Return position of the tag
-  router.get("/snap", areas.getToolPosition);
+  router.get("/snap/:id", areas.getToolPosition);
 
   // Retrieve a single User with id
   router.get("/:id", areas.findOne);
