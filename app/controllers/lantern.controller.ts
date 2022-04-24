@@ -186,11 +186,8 @@ exports.updateStatus = async (req: any, res: any) => {
 		});
 	}
 	try {
-		var query = {macAddress: req.body.macAddress};
-		var newValues = {status: true};
-		const target = await Lantern.findOneAndUpdate(query, newValues);
-		console.log(`Lantern [ID: ${target.id} | IP: ${target.ipAddress} | MAC: ${target.macAddress}] is Online!`);
-		res.send(`Lantern ${target['ipAddress']} is Online!`);
+		const target = await Lantern.findOneAndUpdate({id: req.params.id}, req.body);
+		res.send(`Lantern ${target['ipAddress']} status updated!`);
 	} catch (error) {
 		console.log('error', error);
 		res.status(500).send({

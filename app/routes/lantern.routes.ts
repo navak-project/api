@@ -37,7 +37,7 @@ module.exports = (app : any) => {
    router.put("/:id", lanterns.update);
 
   //Update status
-  router.post("/updateStatus", lanterns.updateStatus);
+  router.post("/updateStatus/:id", lanterns.updateStatus);
 
   // Delete a User with id
   router.delete("/:id", lanterns.delete);
