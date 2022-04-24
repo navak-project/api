@@ -57,7 +57,7 @@ exports.resetAll = async (req: any, res: any) => {
 		const options = {upsert: false};
 		const allUser = await Lantern.find();
 		allUser.forEach(async (element: any) => {
-			await Lantern.updateOne({id: element.id}, {pulse: '0', rgb: '0,0,0,1', picked: false}, options);
+			await Lantern.updateOne({id: element.id}, {pulse: '0', rgb: '0,0,0,255', picked: false}, options);
 			const thisUser = await Lantern.findOne({id: element.id});
 			lanterns.publish(`/lanterns/${thisUser.id}/reset`, JSON.stringify(thisUser));
 			console.log(thisUser);
@@ -74,7 +74,7 @@ exports.resetAll = async (req: any, res: any) => {
 exports.reset = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
-		await Lantern.updateOne({id: id}, {pulse: '0', rgb: '0,0,0,1', picked: false}, {useFindAndModify: false});
+		await Lantern.updateOne({id: id}, {pulse: '0', rgb: '0,0,0,255', picked: false}, {useFindAndModify: false});
     const user = await Lantern.findOne({ id: id });
     /// also reset stations if lanterns resets
 		lanterns.publish(`/lanterns/${user.id}/reset`, JSON.stringify(user));
