@@ -54,7 +54,7 @@ exports.create = async (req: any, res: any) => {
 			return res.status(409).send({message: 'Area is already taken.'});
 		} else {
       await position.save(position);
-      areas.publish('/area', `area changed - ${req.body.id}`);
+      areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size});
 			res.send(position);
 		}
 	} catch (error) {
@@ -102,7 +102,7 @@ exports.update = async (req: any, res: any) => {
 		await Area.updateOne({id: id}, req.body, {
 			useFindAndModify: true
     });
-    areas.publish('/area', `area changed - ${req.body.id}`);
+    areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size});
 		res.send(`Area ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);
@@ -116,7 +116,7 @@ exports.delete = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
     await Area.findOneAndDelete({ id: id });
-    areas.publish('/area', `area changed - ${req.body.id}`);
+    areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size});
 		res.send(`Area ${id} deleted successful!`);
 	} catch (error) {
 		console.log('error', error);
