@@ -38,23 +38,23 @@ exports.create = async (req: any, res: any) => {
 	}
 	try {
 		const position = new Area({
-			id: req.body.id,
-      name: req.body.name,
-      group: req.body.group,
-			x: req.body.x,
-			y: req.body.y,
-			z: 0,
-      size: req.body.size,
-      param1: req.body.param1,
-      param2: req.body.param2,
-      param3: req.body.param3,
+		id: req.body.id,
+		name: req.body.name,
+		group: req.body.group,
+		x: req.body.x,
+		y: req.body.y,
+		z: 0,
+		size: req.body.size,
+		param1: req.body.param1,
+		param2: req.body.param2,
+		param3: req.body.param3,
 		});
 		const existing = await Area.findOne({id: req.body.id});
 		if (existing) {
 			return res.status(409).send({message: 'Area is already taken.'});
 		} else {
       await position.save(position);
-      areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size});
+      areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size}.toString());
 			res.send(position);
 		}
 	} catch (error) {
@@ -102,7 +102,7 @@ exports.update = async (req: any, res: any) => {
 		await Area.updateOne({id: id}, req.body, {
 			useFindAndModify: true
     });
-    areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size});
+    areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size}.toString());
 		res.send(`Area ${id} updated successful!`);
 	} catch (error) {
 		console.log('error', error);
