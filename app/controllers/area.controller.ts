@@ -116,7 +116,7 @@ exports.delete = async (req: any, res: any) => {
 	const id = req.params.id;
 	try {
     await Area.findOneAndDelete({ id: id });
-    areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size});
+    areas.publish('/area', {'name':req.body.name, 'pos': req.body.position, 'size': req.body.size}.toString());
 		res.send(`Area ${id} deleted successful!`);
 	} catch (error) {
 		console.log('error', error);
