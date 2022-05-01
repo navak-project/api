@@ -3,9 +3,9 @@ module.exports = (mongoose: any) => {
     'fixture',
     mongoose.Schema({
       id: {
-        type: Number,
-        required: true,
-        default: 0
+        type: String,
+        required: false,
+        default: '0000'
       },
       name: {
           type: String,

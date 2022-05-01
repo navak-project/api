@@ -119,8 +119,9 @@ exports.findOne = async (req: any, res: any) => {
 
 exports.presence = async (req: any, res: any) => {
 	const id = req.params.id;
-  console.log("🚀 ~ file: station.controller.ts ~ line 121 ~ exports.presence= ~ id", id);
   try {
+    const station = await Station.findOne({id: id});
+    console.log("🚀 ~ file: station.controller.ts ~ line 125 ~ exports.presence= ~ station", req.body.presence);
     await Station.findOneAndUpdate(
       { id: id },
       {
@@ -137,12 +138,13 @@ exports.presence = async (req: any, res: any) => {
 };
 
 exports.update = async (req: any, res: any) => {
+  console.log("🚀 ~ file: station.controller.ts ~ line 141 ~ exports.update= ~ req", req.params.id);
 	if (!req.body) {
 		return res.status(400).send({
 			message: 'Data to update can not be empty!'
 		});
 	}
-	const id = req.params.id;
+  const id = req.params.id;
   try {
     await Station.findOneAndUpdate(
       { id: id },

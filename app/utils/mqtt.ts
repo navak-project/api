@@ -6,7 +6,7 @@ let areas: any;
 let stations: any;
 let fixtures: any;
 export function connectMqtt() {
-	const host = process.env.MQTT;
+	const host = '127.0.0.1';
 	const port = '1883';
 	client = mqtt.connect(`mqtt://${host}:${port}`);
 	lanterns = mqtt.connect(`mqtt://${host}:${port}`);
