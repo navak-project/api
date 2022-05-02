@@ -1,6 +1,7 @@
 import { db } from '../models';
 import {fixtures} from '../utils/mqtt';
 const Fixture = db.fixtures;
+const Areas = db.areas;
 
 exports.create = async (req: any, res: any) => {
 	if (!req.body) {
@@ -17,16 +18,18 @@ exports.create = async (req: any, res: any) => {
       address: req.body.address,
       area: req.body.area,
       fixtureType: req.body.fixtureType
-		});
+    });
+    const area = await Areas.find({name: req.body.area});
 		const existing = await Fixture.find({id: req.body.id});
-    console.log("🚀 ~ file: fixture.controller.ts ~ line 17 ~ exports.create= ~ existing", existing.length);
-		if (existing.length !== 0) {
-			return res.status(409).send({message: 'Fixture is already taken.'});
-		} else {
-      await fixture.save(fixture);
-      fixtures.publish('/fixture', `area changed - ${req.body.id}`);
-			res.send(fixture);
-		}
+		if (existing.length !== 0 ) {
+			return res.status(409).send({message: 'Fixture is already taken. Please try another ID.'});
+    }
+    if (area.length === 0) {
+			return res.status(409).send({message: 'The area don\'t exist.'});
+    }
+    await fixture.save(fixture);
+    fixtures.publish('/fixture', `${req.body.id}`);
+    res.send(fixture);
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({
