@@ -24,6 +24,9 @@ module.exports = (app : any) => {
   //Reboot lanterns
   router.post("/reboot", lanterns.reboot);
 
+  //ignite lanterns
+  router.post("/randomIgnite", lanterns.igniteLanternsTest);
+
   //Flash lanterns
   router.post("/flash", lanterns.flash);
 

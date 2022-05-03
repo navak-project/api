@@ -1,5 +1,5 @@
 import {db} from '../models';
-import {getRandomColor} from '../utils';
+import {getRandomColor, igniteLanternsTest} from '../utils';
 const Lantern = db.lanterns;
 const Station = db.stations;
 import {lanterns} from '../utils/mqtt';
@@ -108,6 +108,17 @@ exports.randomUser = async (req: any, res: any) => {
 			message: error
 		});
 	}
+};
+
+exports.igniteLanternsTest = async (req: any, res: any) => {
+  try {
+    await igniteLanternsTest();
+    res.send('Lanterns test done!');
+  } catch (error) {
+    res.status(500).send({
+      message: error
+    });
+  }
 };
 
 exports.create = async (req: any, res: any) => {
