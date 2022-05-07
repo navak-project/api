@@ -138,7 +138,6 @@ exports.presence = async (req: any, res: any) => {
 };
 
 exports.update = async (req: any, res: any) => {
-  console.log("🚀 ~ file: station.controller.ts ~ line 141 ~ exports.update= ~ req", req.params.id);
 	if (!req.body) {
 		return res.status(400).send({
 			message: 'Data to update can not be empty!'
