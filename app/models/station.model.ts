@@ -58,6 +58,14 @@ module.exports = (mongoose: any) => {
       polarState: {
         type: Number,
         default: 0,
+      },
+      presenceStatus: {
+        type: String,
+        default: '',
+      },
+      presenceState: {
+        type: Number,
+        default: 0,
       }
     })
   );
