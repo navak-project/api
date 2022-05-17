@@ -66,7 +66,15 @@ module.exports = (mongoose: any) => {
       presenceState: {
         type: Number,
         default: 0,
-      }
+      },
+      minDeviceValue: {
+        type: Number,
+        default: 35,
+      },
+      maxDeviceValue: {
+        type: Number,
+        default: 65,
+      },
     })
   );
   return Station;
